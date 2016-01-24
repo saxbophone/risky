@@ -77,6 +77,11 @@ extern "C"{
     // Creates a new blank risky state struct
     risky_state_t risky_init();
 
+    // execute a functional instruction and return the value of the result
+    uint8_t function_operation(
+        instruction_opcode_e opcode, literal_value_t a, literal_value_t b
+    );
+
     // Given a risky state struct, executes one instruction for this machine state
     void risky_run(risky_state_t * state);
 

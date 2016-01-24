@@ -43,15 +43,50 @@ extern "C"{
         risky_state_t state;
         // set program counter to 0
         state.program_counter = 0;
-        // set all registers to 0
-        for(int i = 0; i < 16; i++) {
-            state.registers[i] = 0;
-        }
-        // set all RAM addresses to 0
-        for(int i = 0; i < 256; i++) {
-            state.ram[i] = 0;
-        }
+        // // set all registers to 0
+        // for(int i = 0; i < 16; i++) {
+        //     state.registers[i] = 0;
+        // }
+        // // set all RAM addresses to 0
+        // for(int i = 0; i < 256; i++) {
+        //     state.ram[i] = 0;
+        // }
         return state;
+    }
+
+    uint8_t function_operation(
+        instruction_opcode_e opcode, literal_value_t a, literal_value_t b
+    ) {
+        uint8_t result;
+        switch(opcode) {
+            case ADD:
+                result = a + b;
+                break;
+            case SUB:
+                result = a - b;
+                break;
+            case MUL:
+                result = a * b;
+                break;
+            case MOD:
+                result = a % b;
+                break;
+            case AND:
+                result = a & b;
+                break;
+            case NOT:
+                result = ~ a;
+                break;
+            case OR:
+                result = a | b;
+                break;
+            case XOR:
+                result = a ^ b;
+                break;
+            default:
+                result = 0;
+        }
+        return result;
     }
 
     // Given a risky state struct, executes one instruction for this machine state
@@ -74,6 +109,14 @@ extern "C"{
             case NOT:
             case OR:
             case XOR:
+                // It's a mathematical or logical operation that works with two
+                // registers and stores result in another register
+                state->registers[instruction.primary] = function_operation(
+                    instruction.opcode,
+                    state->registers[instruction.operands.registers.a],
+                    state->registers[instruction.operands.registers.b]
+                );
+                break;
             case SAV:
             case LOD:
             case COP:
