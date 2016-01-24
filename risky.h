@@ -73,6 +73,12 @@ extern "C"{
         instruction_operands_t operands; // 8 bits
     } instruction_struct_t;
 
+    // instruction union, the top-most type used for storing an instruction
+    typedef union {
+        instruction_raw_t raw;
+        instruction_struct_t data;
+    } instruction_t;
+
 #ifdef __cplusplus
 } // extern "C"
 #endif
