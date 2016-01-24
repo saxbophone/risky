@@ -14,7 +14,7 @@
 extern "C"{
 #endif
 
-    // Returns the raw bytes of an instruction struct
+    // Populates a byte array with the raw bytes that represent an instruction struct
     void instruction_to_raw(instruction_t instruction, instruction_raw_t * raw_instruction) {
         // The instruction is processed 4 bits at a time, as that's the lowest value we care about.
         // This makes sure machine-specific endianness doesn't cause any problems.
@@ -22,9 +22,9 @@ extern "C"{
         raw_instruction[0] += instruction.primary; // no bitmask needed, lower 4 bits
         raw_instruction[1] += (instruction.operands.registers.a << 4); // bit mask the higher 4 bits
         raw_instruction[1] += (instruction.operands.registers.b); // no bitmask needed, lower 4 bits
-        // return raw_instruction;
     }
-    // Creates a new instruction struct from raw bytes
+
+    // Creates and returns a new instruction struct from raw bytes
     instruction_t instruction_from_raw(instruction_raw_t * raw_instruction) {
         // The instruction is processed 4 bits at a time, as that's the lowest value we care about.
         // This makes sure machine-specific endianness doesn't cause any problems.

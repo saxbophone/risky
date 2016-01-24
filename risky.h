@@ -63,6 +63,7 @@ extern "C"{
 
     // Returns the raw bytes of an instruction struct
     void instruction_to_raw(instruction_t instruction, instruction_raw_t * raw_instruction);
+
     // Creates a new instruction struct from raw bytes
     instruction_t instruction_from_raw(instruction_raw_t * raw_instruction);
 

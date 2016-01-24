@@ -25,8 +25,14 @@ int main(int argc, char const *argv[])
         instruction.opcode, instruction.primary,
         instruction.operands.registers.a, instruction.operands.registers.b
     );
+    // now doing the opposite:
+    instruction_t add;
+    add.opcode = ADD;
+    add.primary = 0x7;
+    add.operands.registers.a = 0x5;
+    add.operands.registers.b = 0x6;
     instruction_raw_t raw[2] = { 0x00, 0x00 };
-    instruction_to_raw(instruction, raw);
+    instruction_to_raw(add, raw);
     printf("%02X%02X\n", raw[0], raw[1]);
     return 0;
 }
