@@ -36,6 +36,50 @@ extern "C"{
         return instruction;
     }
 
+    // Creates a new blank risky state struct
+    risky_state_t risky_init() {
+        risky_state_t state;
+        state.program_counter = 0;
+        return state;
+    }
+
+    // Given a risky state struct, executes one instruction for this machine state
+    void risky_run(risky_state_t * state) {
+        // build temporary two-item array to read the bytes of the instruction into
+        instruction_raw_t buffer[2] = {
+            state->ram[state->program_counter],
+            state->ram[(state->program_counter + 1) % 256] // in case of overflow
+        };
+        // build instruction from these bytes
+        instruction_t instruction = instruction_from_raw(buffer);
+        // use instruction opcode to execute the appropriate operation:
+        // TODO: Implement execution of actual instructions
+        switch(instruction.opcode) {
+            case ADD:
+            case SUB:
+            case MUL:
+            case MOD:
+            case AND:
+            case NOT:
+            case OR:
+            case XOR:
+            case SAV:
+            case LOD:
+            case COP:
+            case SET:
+            case JMP:
+            case JIF:
+            case EQU:
+            case GRT:
+                break;
+            default:
+                // Oh noes! Something went horribly wrong for us to get here!
+                (void)0; // no-op for now
+        }
+        // finally, increment program counter by 2 (instruction length)
+        state->program_counter += 2;
+    }
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

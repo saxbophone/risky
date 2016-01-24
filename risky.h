@@ -61,11 +61,24 @@ extern "C"{
         instruction_operands_t operands; // instruction_operands_t is 8 bits
     } instruction_t;
 
+    // risky virtual machine state struct, stores the entire state of the machine
+    typedef struct {
+        uint8_t program_counter; // stores index of currently executing instruction in RAM
+        uint8_t registers[16]; // 16 8-bit registers at our disposal
+        uint8_t ram[256]; // 256 bytes of RAM at our disposal!
+    } risky_state_t;
+
     // Populates a byte array with the raw bytes that represent an instruction struct
     void instruction_to_raw(instruction_t instruction, instruction_raw_t * raw_instruction);
 
     // Creates and returns a new instruction struct from raw bytes
     instruction_t instruction_from_raw(instruction_raw_t * raw_instruction);
+
+    // Creates a new blank risky state struct
+    risky_state_t risky_init();
+
+    // Given a risky state struct, executes one instruction for this machine state
+    void risky_run(risky_state_t * state);
 
 #ifdef __cplusplus
 } // extern "C"
