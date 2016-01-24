@@ -20,7 +20,14 @@ extern "C"{
     }
     // Creates a new instruction struct from raw bytes
     instruction_t instruction_from_raw(instruction_raw_t raw_instruction) {
+        // The instruction is processed 4 bits at a time, as that's the lowest value we care about.
+        // This makes sure machine-specific endianness doesn't cause any problems.
         instruction_t instruction;
+        instruction.opcode = (raw_instruction[0] & 0xF0U) >> 4; // bit mask the higher 4 bits
+        instruction.primary = (raw_instruction[0] & 0x0FU); // bit mask the lower 4 bits
+        instruction.operands.registers.a = (raw_instruction[1] & 0xF0U) >> 4; // bit mask the higher 4 bits
+        instruction.operands.registers.b = (raw_instruction[1] & 0x0FU); // bit mask the lower 4 bits
+        return instruction;
     }
 
 #ifdef __cplusplus
