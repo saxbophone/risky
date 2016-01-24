@@ -61,10 +61,10 @@ extern "C"{
         instruction_operands_t operands; // instruction_operands_t is 8 bits
     } instruction_t;
 
-    // Returns the raw bytes of an instruction struct
+    // Populates a byte array with the raw bytes that represent an instruction struct
     void instruction_to_raw(instruction_t instruction, instruction_raw_t * raw_instruction);
 
-    // Creates a new instruction struct from raw bytes
+    // Creates and returns a new instruction struct from raw bytes
     instruction_t instruction_from_raw(instruction_raw_t * raw_instruction);
 
 #ifdef __cplusplus
