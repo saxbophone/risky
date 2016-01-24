@@ -8,6 +8,8 @@ There are only sixteen instructions, all of which are two bytes long regardless 
 
 The CPU can handle 8-bit unsigned integers only. As a result, it can address up to 256 bytes of RAM. This could be extended to 16-bit integers and then being able to address up to 64K of RAM. This could be done by doubling the size of the part of the instruction used for RAM addressing (lengthening the instruction size to three bytes). To make sure this space is not completely wasted, instructions that operate on registers could be parallelised to operate on two sets at once, perhaps.
 
+**Note:** In all cases (register addresses, RAM addresses, opcodes and literal values) all integers are unsigned and are Big-Endian.
+
 ## Instruction Categories
 
 There are four categories of instructions, each category having four instructions.
