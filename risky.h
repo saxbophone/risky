@@ -80,6 +80,9 @@ extern "C"{
     // Given a risky state struct, executes one instruction for this machine state
     void risky_run(risky_state_t * state);
 
+    // Prints a HEX dump of machine's program counter, registers and RAM.
+    void risky_dump(risky_state_t * state);
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

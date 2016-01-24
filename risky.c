@@ -8,6 +8,8 @@
  * See README.md for more information and LICENSE for licensing details.
  */
 
+#include <stdio.h>
+
 #include "risky.h"
 
 #ifdef __cplusplus
@@ -39,7 +41,16 @@ extern "C"{
     // Creates a new blank risky state struct
     risky_state_t risky_init() {
         risky_state_t state;
+        // set program counter to 0
         state.program_counter = 0;
+        // set all registers to 0
+        for(int i = 0; i < 16; i++) {
+            state.registers[i] = 0;
+        }
+        // set all RAM addresses to 0
+        for(int i = 0; i < 256; i++) {
+            state.ram[i] = 0;
+        }
         return state;
     }
 
@@ -78,6 +89,26 @@ extern "C"{
         }
         // finally, increment program counter by 2 (instruction length)
         state->program_counter += 2;
+    }
+
+    // Prints a HEX dump of machine's program counter, registers and RAM.
+    void risky_dump(risky_state_t * state) {
+        printf("-----------------------------------------------\n");
+        printf("RISKY Virtual Machine Memory Dump\n");
+        printf("Program Counter: %02X\n", state->program_counter);
+        printf("Registers:\n");
+        for(int i = 0; i < 16; i++) {
+            printf("%02X ", state->registers[i]);
+        }
+        printf("\n");
+        printf("Memory:\n");
+        for(int i = 0; i < 16; i++) {
+            for(int j = 0; j < 16; j++) {
+                printf("%02X ", state->ram[(i * 16) + j]);
+            }
+            printf("\n");
+        }
+        printf("-----------------------------------------------\n");
     }
 
 #ifdef __cplusplus

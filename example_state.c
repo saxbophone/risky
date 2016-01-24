@@ -19,8 +19,8 @@ int main(int argc, char const *argv[])
      * instructions on it.
      */
     risky_state_t state = risky_init();
-    printf("%d\n", state.program_counter);
+    risky_dump(&state);
     risky_run(&state);
-    printf("%d\n", state.program_counter);
+    risky_dump(&state);
     return 0;
 }
