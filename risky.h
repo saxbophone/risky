@@ -62,9 +62,9 @@ extern "C"{
     } instruction_t;
 
     // Returns the raw bytes of an instruction struct
-    instruction_raw_t * instruction_to_raw(instruction_t);
+    instruction_raw_t * instruction_to_raw(instruction_t instruction);
     // Creates a new instruction struct from raw bytes
-    instruction_t instruction_from_raw(instruction_raw_t);
+    instruction_t instruction_from_raw(instruction_raw_t raw_instruction);
 
 #ifdef __cplusplus
 } // extern "C"
