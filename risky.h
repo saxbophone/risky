@@ -12,12 +12,14 @@
 #ifndef SAXBOPHONE_RISKY_H
 #define SAXBOPHONE_RISKY_H
 
+#include <stdint.h>
+
 #ifdef __cplusplus
 extern "C"{
 #endif
 
     // instruction opcodes enum
-    typedef enum opcode {
+    typedef enum {
         ADD = 0x0U,
         SUB = 0x1U,
         MUL = 0x2U,
@@ -34,7 +36,42 @@ extern "C"{
         JIF = 0xDU,
         EQU = 0xEU,
         GRT = 0xFU
-    } Opcode;
+    } instruction_opcode_enum_t;
+
+    // instruction opcode type (restricted to 4 bits in struct)
+    typedef uint8_t instruction_opcode_t;
+
+    // raw instruction type (2 unsigned bytes)
+    typedef uint8_t instruction_raw_t[2];
+
+    // // register address type (restricted to 4 bits in struct)
+    typedef uint8_t register_address_t;
+
+    // memory address type
+    typedef uint8_t memory_address_t;
+
+    // literal value type
+    typedef uint8_t literal_value_t;
+
+    // registers struct, used for packing two register operands into a byte
+    typedef struct {
+        register_address_t a : 4;
+        register_address_t b : 4;
+    } registers_t;
+
+    // operands union, used for the second byte of an instruction
+    typedef union instruction_operands_t {
+        memory_address_t memory_address;
+        literal_value_t literal_value;
+        registers_t registers;
+    } instruction_operands_t;
+
+    // instruction_struct, used to represent a whole instruction
+    typedef struct {
+        instruction_opcode_t opcode : 4;
+        register_address_t rds_register : 4;
+        instruction_operands_t operands; // 8 bits
+    } instruction_struct_t;
 
 #ifdef __cplusplus
 } // extern "C"
