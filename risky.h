@@ -18,8 +18,8 @@
 extern "C"{
 #endif
 
-    // raw instruction type (2 unsigned bytes)
-    typedef uint8_t instruction_raw_t[2];
+    // raw instruction type
+    typedef uint8_t instruction_raw_t;
 
     // instruction opcodes enum
     typedef enum {
@@ -62,9 +62,9 @@ extern "C"{
     } instruction_t;
 
     // Returns the raw bytes of an instruction struct
-    instruction_raw_t * instruction_to_raw(instruction_t instruction);
+    void instruction_to_raw(instruction_t instruction, instruction_raw_t * raw_instruction);
     // Creates a new instruction struct from raw bytes
-    instruction_t instruction_from_raw(instruction_raw_t raw_instruction);
+    instruction_t instruction_from_raw(instruction_raw_t * raw_instruction);
 
 #ifdef __cplusplus
 } // extern "C"
