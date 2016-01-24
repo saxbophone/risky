@@ -9,6 +9,7 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "risky.h"
 
@@ -69,7 +70,12 @@ extern "C"{
                 result = a * b;
                 break;
             case MOD:
-                result = a % b;
+                // if b is zero, set result to 0 - this is to avoid modulo by zero error
+                if(b == 0) {
+                    result = 0x00U;
+                } else {
+                    result = a % b;
+                }
                 break;
             case AND:
                 result = a & b;
@@ -84,7 +90,7 @@ extern "C"{
                 result = a ^ b;
                 break;
             default:
-                result = 0;
+                result = 0x00U;
         }
         return result;
     }
@@ -98,6 +104,8 @@ extern "C"{
         };
         // build instruction from these bytes
         instruction_t instruction = instruction_from_raw(buffer);
+        // increment program counter by 2 (instruction length) in preparation for next one
+        state->program_counter += 2;
         // use instruction opcode to execute the appropriate operation:
         // TODO: Implement execution of actual instructions
         switch(instruction.opcode) {
@@ -118,20 +126,53 @@ extern "C"{
                 );
                 break;
             case SAV:
+                // Save the value of a register to RAM
+                state->ram[instruction.operands.memory_address] = state->registers[instruction.primary];
+                break;
             case LOD:
+                // Load a value from RAM to a register
+                state->registers[instruction.primary] = state->ram[instruction.operands.memory_address];
+                break;
             case COP:
+                // Copy the value of one register to another register
+                state->registers[instruction.primary] = state->registers[instruction.operands.registers.a];
+                break;
             case SET:
+                // Set the value of one register to a literal value in the instruction
+                state->registers[instruction.primary] = instruction.operands.literal_value;
+                break;
             case JMP:
+                // JUMP to the memory address in the instruction
+                state->program_counter = instruction.operands.memory_address;
+                break;
             case JIF:
+                // JUMP as above, but only if the primary register is non-zero
+                if(state->registers[instruction.primary]) {
+                    state->program_counter = instruction.operands.memory_address;
+                }
+                break;
             case EQU:
+                // compare if registers are equal or not, write 0xff to result if true
+                if(state->registers[instruction.operands.registers.a] == state->registers[instruction.operands.registers.b]) {
+                    state->registers[instruction.primary] = 0xFFU;
+                } else {
+                    state->registers[instruction.primary] = 0x00U;
+                }
+                break;
             case GRT:
+                // compare if register a is greater than b, write 0xff to result if true
+                if(state->registers[instruction.operands.registers.a] > state->registers[instruction.operands.registers.b]) {
+                    state->registers[instruction.primary] = 0xFFU;
+                } else {
+                    state->registers[instruction.primary] = 0x00U;
+                }
                 break;
             default:
                 // Oh noes! Something went horribly wrong for us to get here!
-                (void)0; // no-op for now
+                fprintf(stderr, "FATAL: Instruction not found.\n");
+                risky_dump(state);
+                abort();
         }
-        // finally, increment program counter by 2 (instruction length)
-        state->program_counter += 2;
     }
 
     // Prints a HEX dump of machine's program counter, registers and RAM.
