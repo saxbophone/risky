@@ -66,17 +66,11 @@ extern "C"{
         registers_t registers;
     } instruction_operands_t;
 
-    // instruction_struct, used to represent a whole instruction
+    // instruction type, used to represent a whole instruction
     typedef struct {
         instruction_opcode_t opcode : 4;
         register_address_t rds_register : 4;
         instruction_operands_t operands; // 8 bits
-    } instruction_struct_t;
-
-    // instruction union, the top-most type used for storing an instruction
-    typedef union {
-        instruction_raw_t raw;
-        instruction_struct_t data;
     } instruction_t;
 
 #ifdef __cplusplus
