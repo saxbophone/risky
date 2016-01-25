@@ -9,7 +9,7 @@
  */
 
 #include <stdio.h>
-#include <time.h>
+#include <unistd.h>
 
 #include "risky.h"
 
@@ -24,8 +24,7 @@ int main(int argc, char const *argv[])
     while(1) {
         risky_run(&state);
         risky_dump(&state);
-        unsigned int wait = time(0) + 1;
-        while(time(0) < wait);
+        usleep(50000);
     }
     return 0;
 }
