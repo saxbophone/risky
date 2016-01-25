@@ -25,6 +25,8 @@ extern "C"{
         // This makes sure machine-specific endianness doesn't cause any problems.
         raw_instruction[0] += (instruction.opcode << 4); // bit mask the higher 4 bits
         raw_instruction[0] += instruction.primary; // no bitmask needed, lower 4 bits
+        // TODO: Implement conditional handling based on whether the instruction's operand
+        // is an 8-bit or two 4-bits.
         raw_instruction[1] += (instruction.operands.registers.a << 4); // bit mask the higher 4 bits
         raw_instruction[1] += (instruction.operands.registers.b); // no bitmask needed, lower 4 bits
     }
