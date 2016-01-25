@@ -8,6 +8,8 @@
  * See README.md for more information and LICENSE for licensing details.
  */
 
+#include <stdbool.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -34,8 +36,23 @@ extern "C"{
         instruction_t instruction = {};
         instruction.opcode = (raw_instruction[0] & 0xF0U) >> 4; // bit mask the higher 4 bits
         instruction.primary = (raw_instruction[0] & 0x0FU); // bit mask the lower 4 bits
-        instruction.operands.registers.a = (raw_instruction[1] & 0xF0U) >> 4; // bit mask the higher 4 bits
-        instruction.operands.registers.b = (raw_instruction[1] & 0x0FU); // bit mask the lower 4 bits
+        // if it's an instruction that deals with a memory address or a literal value,
+        // we can just copy it across. All other instructions operate on two nibbles
+        // (4 bits) so these need to be handled differently.
+        switch(instruction.opcode) {
+            case SAV:
+            case LOD:
+            case SET:
+            case JMP:
+            case JIF:
+                // just copy across
+                instruction.operands.literal_value = raw_instruction[1];
+                break;
+            default:
+                // split up into two nibbles
+                instruction.operands.registers.a = ((raw_instruction[1] & 0xF0U) >> 4); // bit mask the higher 4 bits
+                instruction.operands.registers.b = (raw_instruction[1] & 0x0FU); // bit mask the lower 4 bits
+        }
         return instruction;
     }
 
@@ -79,31 +96,64 @@ extern "C"{
         return result;
     }
 
-    // Creates a new blank risky state struct
+    // Creates and returns a new blank risky state struct
     risky_state_t risky_init() {
         // initialised to all zeros by default
         risky_state_t state = {};
         return state;
     }
 
+    // Given a file path and a risky state struct, attempts to load the file
+    // contents into the memory of the risky state. Returns true
+    bool risky_boot(char filepath[], risky_state_t * state) {
+        // buffer to read into temporarily
+        uint8_t buffer[256];
+        // try and open the file at the given file path in read binary mode
+        FILE * file_handle = fopen(filepath, "rb");
+        if(file_handle == NULL) {
+            // couldn't open file, return false
+            return false;
+        } else {
+            // we opened the file, now try and read 256 bytes:
+            size_t bytes_read = fread(&buffer, 1, 256, file_handle);
+            // check if we read the correct number of bytes
+            if(bytes_read == 256) {
+                // we read exactly 256 bytes, so we can now copy these to machine ram
+                for(int i = 0; i < 256; i++) {
+                    state->ram[i] = buffer[i];
+                }
+                // finally return true so we know boot from file was successful
+                return true;
+            } else {
+                // if we read less (or more) than 256 bytes, then something went wrong
+                return false;
+            }
+        }
+    }
+
     // Prints a HEX dump of machine's program counter, registers and RAM.
     void risky_dump(risky_state_t * state) {
-        printf("-----------------------------------------------\n");
+        printf("------------------------------------------------\n");
         printf("RISKY Virtual Machine Memory Dump\n");
         printf("Program Counter: %02X\n", state->program_counter);
         printf("Registers:\n");
         for(int i = 0; i < 16; i++) {
-            printf("%02X ", state->registers[i]);
+            printf(" %02X", state->registers[i]);
         }
         printf("\n");
         printf("Memory:\n");
         for(int i = 0; i < 16; i++) {
             for(int j = 0; j < 16; j++) {
-                printf("%02X ", state->ram[(i * 16) + j]);
+                if((i * 16) + j == state->program_counter) {
+                    printf("*");
+                } else {
+                    printf(" ");
+                }
+                printf("%02X", state->ram[(i * 16) + j]);
             }
             printf("\n");
         }
-        printf("-----------------------------------------------\n");
+        printf("------------------------------------------------\n");
     }
 
     // Prints an error message to stderr, dumps machine state and aborts.

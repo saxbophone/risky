@@ -12,6 +12,7 @@
 #ifndef SAXBOPHONE_RISKY_H
 #define SAXBOPHONE_RISKY_H
 
+#include <stdbool.h>
 #include <stdint.h>
 
 #ifdef __cplusplus
@@ -79,8 +80,12 @@ extern "C"{
         instruction_opcode_e opcode, literal_value_t a, literal_value_t b
     );
 
-    // Creates a new blank risky state struct
+    // Creates and returns a new blank risky state struct
     risky_state_t risky_init();
+
+    // Given a file path and a risky state struct, attempts to load the file
+    // contents into the memory of the risky state. Returns true
+    bool risky_boot(char filepath[], risky_state_t * state);
 
     // Prints a HEX dump of machine's program counter, registers and RAM.
     void risky_dump(risky_state_t * state);
