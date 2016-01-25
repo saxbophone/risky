@@ -31,28 +31,12 @@ extern "C"{
     instruction_t instruction_from_raw(instruction_raw_t * raw_instruction) {
         // The instruction is processed 4 bits at a time, as that's the lowest value we care about.
         // This makes sure machine-specific endianness doesn't cause any problems.
-        instruction_t instruction;
+        instruction_t instruction = {};
         instruction.opcode = (raw_instruction[0] & 0xF0U) >> 4; // bit mask the higher 4 bits
         instruction.primary = (raw_instruction[0] & 0x0FU); // bit mask the lower 4 bits
         instruction.operands.registers.a = (raw_instruction[1] & 0xF0U) >> 4; // bit mask the higher 4 bits
         instruction.operands.registers.b = (raw_instruction[1] & 0x0FU); // bit mask the lower 4 bits
         return instruction;
-    }
-
-    // Creates a new blank risky state struct
-    risky_state_t risky_init() {
-        risky_state_t state;
-        // set program counter to 0
-        state.program_counter = 0;
-        // // set all registers to 0
-        // for(int i = 0; i < 16; i++) {
-        //     state.registers[i] = 0;
-        // }
-        // // set all RAM addresses to 0
-        // for(int i = 0; i < 256; i++) {
-        //     state.ram[i] = 0;
-        // }
-        return state;
     }
 
     uint8_t function_operation(
@@ -93,6 +77,43 @@ extern "C"{
                 result = 0x00U;
         }
         return result;
+    }
+
+    // Creates a new blank risky state struct
+    risky_state_t risky_init() {
+        // initialised to all zeros by default
+        risky_state_t state = {};
+        return state;
+    }
+
+    // Prints a HEX dump of machine's program counter, registers and RAM.
+    void risky_dump(risky_state_t * state) {
+        printf("-----------------------------------------------\n");
+        printf("RISKY Virtual Machine Memory Dump\n");
+        printf("Program Counter: %02X\n", state->program_counter);
+        printf("Registers:\n");
+        for(int i = 0; i < 16; i++) {
+            printf("%02X ", state->registers[i]);
+        }
+        printf("\n");
+        printf("Memory:\n");
+        for(int i = 0; i < 16; i++) {
+            for(int j = 0; j < 16; j++) {
+                printf("%02X ", state->ram[(i * 16) + j]);
+            }
+            printf("\n");
+        }
+        printf("-----------------------------------------------\n");
+    }
+
+    // Prints an error message to stderr, dumps machine state and aborts.
+    void risky_err(risky_state_t * state, char message[]) {
+        // print error message to stderr
+        fprintf(stderr, "%s\n", message);
+        // dump machine state
+        risky_dump(state);
+        // abort, because exit() is too lame
+        abort();
     }
 
     // Given a risky state struct, executes one instruction for this machine state
@@ -169,30 +190,8 @@ extern "C"{
                 break;
             default:
                 // Oh noes! Something went horribly wrong for us to get here!
-                fprintf(stderr, "FATAL: Instruction not found.\n");
-                risky_dump(state);
-                abort();
+                risky_err(state, "FATAL: Instruction not found.");
         }
-    }
-
-    // Prints a HEX dump of machine's program counter, registers and RAM.
-    void risky_dump(risky_state_t * state) {
-        printf("-----------------------------------------------\n");
-        printf("RISKY Virtual Machine Memory Dump\n");
-        printf("Program Counter: %02X\n", state->program_counter);
-        printf("Registers:\n");
-        for(int i = 0; i < 16; i++) {
-            printf("%02X ", state->registers[i]);
-        }
-        printf("\n");
-        printf("Memory:\n");
-        for(int i = 0; i < 16; i++) {
-            for(int j = 0; j < 16; j++) {
-                printf("%02X ", state->ram[(i * 16) + j]);
-            }
-            printf("\n");
-        }
-        printf("-----------------------------------------------\n");
     }
 
 #ifdef __cplusplus

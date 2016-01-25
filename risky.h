@@ -74,19 +74,22 @@ extern "C"{
     // Creates and returns a new instruction struct from raw bytes
     instruction_t instruction_from_raw(instruction_raw_t * raw_instruction);
 
-    // Creates a new blank risky state struct
-    risky_state_t risky_init();
-
     // execute a functional instruction and return the value of the result
     uint8_t function_operation(
         instruction_opcode_e opcode, literal_value_t a, literal_value_t b
     );
 
-    // Given a risky state struct, executes one instruction for this machine state
-    void risky_run(risky_state_t * state);
+    // Creates a new blank risky state struct
+    risky_state_t risky_init();
 
     // Prints a HEX dump of machine's program counter, registers and RAM.
     void risky_dump(risky_state_t * state);
+
+    // Prints an error message to stderr, dumps machine state and aborts.
+    void risky_err(risky_state_t * state, char message[]);
+
+    // Given a risky state struct, executes one instruction for this machine state
+    void risky_run(risky_state_t * state);
 
 #ifdef __cplusplus
 } // extern "C"

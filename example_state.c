@@ -17,7 +17,7 @@ int main(int argc, char const *argv[])
 {
     /*
      * This example code initialises a RISKY state struct and runs some
-     * instructions on it.
+     * instructions on it, dumping machine state after each instruction.
      */
     risky_state_t state = risky_init();
     risky_dump(&state);
