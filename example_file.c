@@ -25,7 +25,7 @@ int main(int argc, char const *argv[])
         while(true) {
             risky_run(&state);
             risky_dump(&state);
-            unsigned int wait = time(0) + 2;
+            unsigned int wait = time(0) + 1;
             while(time(0) < wait);
         }
         return 0;
