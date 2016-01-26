@@ -13,8 +13,7 @@
 
 #include "risky.h"
 
-int main(int argc, char const *argv[])
-{
+int main(int argc, char const *argv[]) {
     /*
      * This example code initialises a RISKY state struct and runs some
      * instructions on it, dumping machine state after each instruction.

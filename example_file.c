@@ -13,8 +13,7 @@
 
 #include "risky.h"
 
-int main(int argc, char const *argv[])
-{
+int main(int argc, char const *argv[]) {
     /*
      * This example code initialises a RISKY state struct from a file containing
      * binary code that represents RISKY instructions.

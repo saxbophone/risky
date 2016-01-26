@@ -12,8 +12,7 @@
 
 #include "risky.h"
 
-int main(int argc, char const *argv[])
-{
+int main(int argc, char const *argv[]) {
     /*
      * This example code builds a RISKY instruction:
      * ADD register 1 to register 7, store result in register 2.

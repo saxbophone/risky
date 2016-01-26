@@ -84,7 +84,8 @@ extern "C"{
     risky_state_t risky_init();
 
     // Given a file path and a risky state struct, attempts to load the file
-    // contents into the memory of the risky state. Returns true
+    // contents into the memory of the risky state.
+    // Returns true on success, false on failure to read or load the file into memory.
     bool risky_boot(char filepath[], risky_state_t * state);
 
     // Prints a HEX dump of machine's program counter, registers and RAM.

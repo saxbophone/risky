@@ -12,8 +12,7 @@
 
 #include "risky.h"
 
-int main(int argc, char const *argv[])
-{
+int main(int argc, char const *argv[]) {
     /*
      * This example code builds a RISKY instruction from raw bytes.
      */
