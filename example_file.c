@@ -9,7 +9,6 @@
  */
 
 #include <stdio.h>
-#include <unistd.h>
 
 #include "risky.h"
 
@@ -20,12 +19,7 @@ int main(int argc, char const *argv[]) {
      */
     risky_state_t state = risky_init();
     if(risky_boot("example_file.bin", &state)) {
-        risky_dump(&state);
-        while(true) {
-            risky_run(&state);
-            risky_dump(&state);
-            usleep(50000);
-        }
+        while(risky_run(&state));
         return 0;
     } else {
         fprintf(stderr, "Couldn't boot from file.\n");

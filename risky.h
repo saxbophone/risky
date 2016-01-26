@@ -75,10 +75,17 @@ extern "C"{
     // Creates and returns a new instruction struct from raw bytes
     instruction_t instruction_from_raw(instruction_raw_t * raw_instruction);
 
-    // execute a functional instruction and return the value of the result
-    uint8_t function_operation(
-        instruction_opcode_e opcode, literal_value_t a, literal_value_t b
-    );
+    // execute a functional instruction and store the value of the result in state
+    // returns true / false on success / error
+    bool function_operation(instruction_t instruction, risky_state_t * state);
+
+    // execute a pure register-to-register operation, manipulating state as necessary
+    // returns false if given opcode was invalid
+    bool register_operation(instruction_t instruction, risky_state_t * state);
+
+    // execute a memory operation, manipulating state as necessary
+    // returns false if given opcode was invalid
+    bool memory_operation(instruction_t instruction, risky_state_t * state);
 
     // Creates and returns a new blank risky state struct
     risky_state_t risky_init();
@@ -88,14 +95,9 @@ extern "C"{
     // Returns true on success, false on failure to read or load the file into memory.
     bool risky_boot(char filepath[], risky_state_t * state);
 
-    // Prints a HEX dump of machine's program counter, registers and RAM.
-    void risky_dump(risky_state_t * state);
-
-    // Prints an error message to stderr, dumps machine state and aborts.
-    void risky_err(risky_state_t * state, char message[]);
-
     // Given a risky state struct, executes one instruction for this machine state
-    void risky_run(risky_state_t * state);
+    // returns true on success, false on error
+    bool risky_run(risky_state_t * state);
 
 #ifdef __cplusplus
 } // extern "C"

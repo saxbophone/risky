@@ -73,11 +73,14 @@ extern "C"{
         return instruction;
     }
 
-    uint8_t function_operation(
-        instruction_opcode_e opcode, literal_value_t a, literal_value_t b
-    ) {
+    // execute a functional instruction and store the value of the result in state
+    // returns true / false on success / error
+    bool function_operation(instruction_t instruction, risky_state_t * state) {
+        // collect / allocate temporary variables
         uint8_t result;
-        switch(opcode) {
+        uint8_t a = state->registers[instruction.operands.registers.a];
+        uint8_t b = state->registers[instruction.operands.registers.b];
+        switch(instruction.opcode) {
             case ADD:
                 result = a + b;
                 break;
@@ -88,9 +91,10 @@ extern "C"{
                 result = a * b;
                 break;
             case MOD:
-                // if b is zero, set result to 0 - this is to avoid modulo by zero error
+                // if b is zero, return false as can't mod by 0
                 if(b == 0) {
-                    result = 0x00U;
+                    // printf("MOD ERROR %d, %d\n", a, b);
+                    return false;
                 } else {
                     result = a % b;
                 }
@@ -108,9 +112,70 @@ extern "C"{
                 result = a ^ b;
                 break;
             default:
-                result = 0x00U;
+                // we should never get here, but if we do for some reason then error
+                return false;
         }
-        return result;
+        // store result in result register
+        state->registers[instruction.primary] = result;
+        // return success
+        return true;
+    }
+
+    // execute a pure register-to-register operation, manipulating state as necessary
+    // returns false if given opcode was invalid
+    bool register_operation(instruction_t instruction, risky_state_t * state) {
+        // allocate temporary variables
+        uint8_t primary = instruction.primary;
+        uint8_t reg_a = instruction.operands.registers.a;
+        uint8_t reg_b = instruction.operands.registers.b;
+        switch(instruction.opcode) {
+            case COP:
+                // Copy the value of one register to another register
+                state->registers[primary] = state->registers[reg_a];
+                break;
+            case EQU:
+                // compare if registers are equal or not, write 0xff to result if true
+                if(state->registers[reg_a] == state->registers[reg_b]) {
+                    state->registers[primary] = 0xFFU;
+                } else {
+                    state->registers[primary] = 0x00U;
+                }
+                break;
+            case GRT:
+                // compare if register a is greater than b, write 0xff to result if true
+                if(state->registers[reg_a] > state->registers[reg_b]) {
+                    state->registers[primary] = 0xFFU;
+                } else {
+                    state->registers[primary] = 0x00U;
+                }
+                break;
+            default:
+                // we should never get here, but if we do for some reason then error
+                return false;
+        }
+        return true;
+    }
+
+    // execute a memory operation, manipulating state as necessary
+    // returns false if given opcode was invalid
+    bool memory_operation(instruction_t instruction, risky_state_t * state) {
+        // allocate temporary variables
+        uint8_t primary = instruction.primary;
+        uint8_t memory_address = instruction.operands.memory_address;
+        switch(instruction.opcode) {
+            case SAV:
+                // Save the value of a register to RAM
+                state->ram[memory_address] = state->registers[primary];
+                break;
+            case LOD:
+                // Load a value from RAM to a register
+                state->registers[primary] = state->ram[memory_address];
+                break;
+            default:
+                // we should never get here, but if we do for some reason then error
+                return false;
+        }
+        return true;
     }
 
     // Creates and returns a new blank risky state struct
@@ -149,43 +214,9 @@ extern "C"{
         }
     }
 
-    // Prints a HEX dump of machine's program counter, registers and RAM.
-    void risky_dump(risky_state_t * state) {
-        printf("------------------------------------------------\n");
-        printf("RISKY Virtual Machine Memory Dump\n");
-        printf("Program Counter: %02X\n", state->program_counter);
-        printf("Registers:\n");
-        for(int i = 0; i < 16; i++) {
-            printf(" %02X", state->registers[i]);
-        }
-        printf("\n");
-        printf("Memory:\n");
-        for(int i = 0; i < 16; i++) {
-            for(int j = 0; j < 16; j++) {
-                if((i * 16) + j == state->program_counter) {
-                    printf("*");
-                } else {
-                    printf(" ");
-                }
-                printf("%02X", state->ram[(i * 16) + j]);
-            }
-            printf("\n");
-        }
-        printf("------------------------------------------------\n");
-    }
-
-    // Prints an error message to stderr, dumps machine state and aborts.
-    void risky_err(risky_state_t * state, char message[]) {
-        // print error message to stderr
-        fprintf(stderr, "%s\n", message);
-        // dump machine state
-        risky_dump(state);
-        // abort, because exit() is too lame
-        abort();
-    }
-
     // Given a risky state struct, executes one instruction for this machine state
-    void risky_run(risky_state_t * state) {
+    // returns true on success, false on error
+    bool risky_run(risky_state_t * state) {
         // build temporary two-item array to read the bytes of the instruction into
         instruction_raw_t buffer[2] = {
             state->ram[state->program_counter],
@@ -193,10 +224,11 @@ extern "C"{
         };
         // build instruction from these bytes
         instruction_t instruction = instruction_from_raw(buffer);
-        // increment program counter by 2 (instruction length) in preparation for next one
-        state->program_counter += 2;
+        // allocate variable to store next value of program counter
+        // this is initially set to the address of the next logical instruction
+        // (our current address + instruction size)
+        uint8_t next_instruction = state->program_counter + 2;
         // use instruction opcode to execute the appropriate operation:
-        // TODO: Implement execution of actual instructions
         switch(instruction.opcode) {
             case ADD:
             case SUB:
@@ -207,59 +239,51 @@ extern "C"{
             case OR:
             case XOR:
                 // It's a mathematical or logical operation that works with two
-                // registers and stores result in another register
-                state->registers[instruction.primary] = function_operation(
-                    instruction.opcode,
-                    state->registers[instruction.operands.registers.a],
-                    state->registers[instruction.operands.registers.b]
-                );
-                break;
-            case SAV:
-                // Save the value of a register to RAM
-                state->ram[instruction.operands.memory_address] = state->registers[instruction.primary];
-                break;
-            case LOD:
-                // Load a value from RAM to a register
-                state->registers[instruction.primary] = state->ram[instruction.operands.memory_address];
+                // registers and stores result in another register.
+                // try and run it and if it's not successful, return false to indicate error.
+                if(!function_operation(instruction, state)) {
+                    return false;
+                }
                 break;
             case COP:
-                // Copy the value of one register to another register
-                state->registers[instruction.primary] = state->registers[instruction.operands.registers.a];
+            case EQU:
+            case GRT:
+                // It's an operation that only manipulates registers
+                // try and run it and if it's not successful, return false to indicate error.
+                if(!register_operation(instruction, state)) {
+                    return false;
+                }
+                break;
+            case SAV:
+            case LOD:
+                // It's an operation that manipulates RAM and registers
+                // try and run it and if it's not successful, return false to indicate error.
+                if(!memory_operation(instruction, state)) {
+                    return false;
+                }
+                break;
+            case JMP:
+                // JUMP to the memory address in the instruction
+                next_instruction = instruction.operands.memory_address;
+                break;
+            case JIF:
+                // JUMP as above, but only if the primary register is non-zero
+                if(state->registers[instruction.primary]) {
+                    next_instruction = instruction.operands.memory_address;
+                }
                 break;
             case SET:
                 // Set the value of one register to a literal value in the instruction
                 state->registers[instruction.primary] = instruction.operands.literal_value;
                 break;
-            case JMP:
-                // JUMP to the memory address in the instruction
-                state->program_counter = instruction.operands.memory_address;
-                break;
-            case JIF:
-                // JUMP as above, but only if the primary register is non-zero
-                if(state->registers[instruction.primary]) {
-                    state->program_counter = instruction.operands.memory_address;
-                }
-                break;
-            case EQU:
-                // compare if registers are equal or not, write 0xff to result if true
-                if(state->registers[instruction.operands.registers.a] == state->registers[instruction.operands.registers.b]) {
-                    state->registers[instruction.primary] = 0xFFU;
-                } else {
-                    state->registers[instruction.primary] = 0x00U;
-                }
-                break;
-            case GRT:
-                // compare if register a is greater than b, write 0xff to result if true
-                if(state->registers[instruction.operands.registers.a] > state->registers[instruction.operands.registers.b]) {
-                    state->registers[instruction.primary] = 0xFFU;
-                } else {
-                    state->registers[instruction.primary] = 0x00U;
-                }
-                break;
             default:
-                // Oh noes! Something went horribly wrong for us to get here!
-                risky_err(state, "FATAL: Instruction not found.");
+                // we should never get here, but if we do for some reason then error
+                return false;
         }
+        // if we're here then this means that the instruction was executed correctly
+        // set the program counter to the address of the next instruction
+        state->program_counter = next_instruction;
+        return true;
     }
 
 #ifdef __cplusplus
