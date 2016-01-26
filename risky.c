@@ -93,7 +93,6 @@ extern "C"{
             case MOD:
                 // if b is zero, return false as can't mod by 0
                 if(b == 0) {
-                    // printf("MOD ERROR %d, %d\n", a, b);
                     return false;
                 } else {
                     result = a % b;
