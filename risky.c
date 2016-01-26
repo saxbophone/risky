@@ -25,10 +25,24 @@ extern "C"{
         // This makes sure machine-specific endianness doesn't cause any problems.
         raw_instruction[0] += (instruction.opcode << 4); // bit mask the higher 4 bits
         raw_instruction[0] += instruction.primary; // no bitmask needed, lower 4 bits
-        // TODO: Implement conditional handling based on whether the instruction's operand
-        // is an 8-bit or two 4-bits.
-        raw_instruction[1] += (instruction.operands.registers.a << 4); // bit mask the higher 4 bits
-        raw_instruction[1] += (instruction.operands.registers.b); // no bitmask needed, lower 4 bits
+        // second byte needs special handling:
+        // if it's an instruction that deals with a memory address or a literal value,
+        // we can just copy it across. All other instructions operate on two nibbles
+        // (4 bits) so these need to be handled differently.
+        switch(instruction.opcode) {
+            case SAV:
+            case LOD:
+            case SET:
+            case JMP:
+            case JIF:
+                // just copy across
+                raw_instruction[1] = instruction.operands.literal_value;
+                break;
+            default:
+                // asemble byte from two nibbles
+                raw_instruction[1] += (instruction.operands.registers.a << 4);
+                raw_instruction[1] += (instruction.operands.registers.b);
+        }
     }
 
     // Creates and returns a new instruction struct from raw bytes
@@ -38,6 +52,7 @@ extern "C"{
         instruction_t instruction = {};
         instruction.opcode = (raw_instruction[0] & 0xF0U) >> 4; // bit mask the higher 4 bits
         instruction.primary = (raw_instruction[0] & 0x0FU); // bit mask the lower 4 bits
+        // second byte needs special handling:
         // if it's an instruction that deals with a memory address or a literal value,
         // we can just copy it across. All other instructions operate on two nibbles
         // (4 bits) so these need to be handled differently.
