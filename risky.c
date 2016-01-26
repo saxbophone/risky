@@ -165,11 +165,11 @@ extern "C"{
         switch(instruction.opcode) {
             case SAV:
                 // Save the value of a register to RAM
-                state->ram[memory_address] = state->registers[primary];
+                state->ram[0][memory_address] = state->registers[primary];
                 break;
             case LOD:
                 // Load a value from RAM to a register
-                state->registers[primary] = state->ram[memory_address];
+                state->registers[primary] = state->ram[0][memory_address];
                 break;
             default:
                 // we should never get here, but if we do for some reason then error
@@ -203,7 +203,7 @@ extern "C"{
             if(bytes_read == 256) {
                 // we read exactly 256 bytes, so we can now copy these to machine ram
                 for(int i = 0; i < 256; i++) {
-                    state->ram[i] = buffer[i];
+                    state->ram[0][i] = buffer[i];
                 }
                 // finally return true so we know boot from file was successful
                 return true;
@@ -219,8 +219,8 @@ extern "C"{
     bool risky_run(risky_state_t * state) {
         // build temporary two-item array to read the bytes of the instruction into
         instruction_raw_t buffer[2] = {
-            state->ram[state->program_counter],
-            state->ram[(state->program_counter + 1) % 256] // in case of overflow
+            state->ram[0][state->program_counter],
+            state->ram[0][(state->program_counter + 1) % 256] // in case of overflow
         };
         // build instruction from these bytes
         instruction_t instruction = instruction_from_raw(buffer);

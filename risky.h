@@ -66,7 +66,7 @@ extern "C"{
     typedef struct {
         uint8_t program_counter; // stores index of currently executing instruction in RAM
         uint8_t registers[16]; // 16 8-bit registers at our disposal
-        uint8_t ram[256]; // 256 bytes of RAM at our disposal!
+        uint8_t ram[256][256]; // 256*256 bytes (64KiB) of RAM at our disposal!
     } risky_state_t;
 
     // Populates a byte array with the raw bytes that represent an instruction struct
