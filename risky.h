@@ -66,6 +66,14 @@ extern "C"{
         uint8_t ram[256][256]; // 256*256 bytes (64KiB) of RAM at our disposal!
     } risky_state_t;
 
+    // Creates and returns a new blank risky state struct
+    risky_state_t risky_init();
+
+    // Given a file path and a risky state struct, attempts to load the file
+    // contents into the memory of the risky state.
+    // Returns true on success, false on failure to read or load the file into memory.
+    bool risky_boot(char filepath[], risky_state_t * state);
+
     // Populates a byte array with the raw bytes that represent an instruction struct
     void instruction_to_raw(instruction_t instruction, instruction_raw_t * raw_instruction);
 
@@ -85,14 +93,6 @@ extern "C"{
     // execute a memory or register operation, manipulating state as necessary
     // returns false if given opcode was invalid
     bool memory_operation(instruction_t instruction, risky_state_t * state);
-
-    // Creates and returns a new blank risky state struct
-    risky_state_t risky_init();
-
-    // Given a file path and a risky state struct, attempts to load the file
-    // contents into the memory of the risky state.
-    // Returns true on success, false on failure to read or load the file into memory.
-    bool risky_boot(char filepath[], risky_state_t * state);
 
     // Given a risky state struct, executes one instruction for this machine state
     // returns true on success, false on error

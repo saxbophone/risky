@@ -19,6 +19,44 @@
 extern "C"{
 #endif
 
+    // Creates and returns a new blank risky state struct
+    risky_state_t risky_init() {
+        // initialised to all zeros by default
+        risky_state_t state = {};
+        return state;
+    }
+
+    // Given a file path and a risky state struct, attempts to load the file
+    // contents into the memory of the risky state.
+    // Returns true on success, false on failure to read or load the file into memory.
+    bool risky_boot(char filepath[], risky_state_t * state) {
+        // buffer to read into temporarily
+        uint8_t buffer[65536];
+        // try and open the file at the given file path in read binary mode
+        FILE * file_handle = fopen(filepath, "rb");
+        if(file_handle == NULL) {
+            // couldn't open file, return false
+            return false;
+        } else {
+            // we opened the file, now try and read 65536 bytes:
+            size_t bytes_read = fread(&buffer, 1, 65536, file_handle);
+            // check if we read the correct number of bytes
+            if(bytes_read == 65536) {
+                // we read exactly 65536 bytes, so we can now copy these to machine ram
+                for(int i = 0; i < 256; i++) {
+                    for(int j = 0; j < 256; j++) {
+                        state->ram[i][j] = buffer[((i * 256) + j) % 65536];
+                    }
+                }
+                // finally return true so we know boot from file was successful
+                return true;
+            } else {
+                // if we read less (or more) than 256 bytes, then something went wrong
+                return false;
+            }
+        }
+    }
+
     // Populates a byte array with the raw bytes that represent an instruction struct
     void instruction_to_raw(instruction_t instruction, instruction_raw_t * raw_instruction) {
         // The instruction is processed 4 bits at a time, as that's the lowest value we care about.
@@ -181,42 +219,6 @@ extern "C"{
         return true;
     }
 
-    // Creates and returns a new blank risky state struct
-    risky_state_t risky_init() {
-        // initialised to all zeros by default
-        risky_state_t state = {};
-        return state;
-    }
-
-    // Given a file path and a risky state struct, attempts to load the file
-    // contents into the memory of the risky state.
-    // Returns true on success, false on failure to read or load the file into memory.
-    bool risky_boot(char filepath[], risky_state_t * state) {
-        // buffer to read into temporarily
-        uint8_t buffer[256];
-        // try and open the file at the given file path in read binary mode
-        FILE * file_handle = fopen(filepath, "rb");
-        if(file_handle == NULL) {
-            // couldn't open file, return false
-            return false;
-        } else {
-            // we opened the file, now try and read 256 bytes:
-            size_t bytes_read = fread(&buffer, 1, 256, file_handle);
-            // check if we read the correct number of bytes
-            if(bytes_read == 256) {
-                // we read exactly 256 bytes, so we can now copy these to machine ram
-                for(int i = 0; i < 256; i++) {
-                    state->ram[0][i] = buffer[i];
-                }
-                // finally return true so we know boot from file was successful
-                return true;
-            } else {
-                // if we read less (or more) than 256 bytes, then something went wrong
-                return false;
-            }
-        }
-    }
-
     // Given a risky state struct, executes one instruction for this machine state
     // returns true on success, false on error
     bool risky_run(risky_state_t * state) {
@@ -237,6 +239,8 @@ extern "C"{
             state->ram[state->program_counter[0]][state->program_counter[1]],
             state->ram[second_address_bytes[0]][second_address_bytes[1]]
         };
+        // TODO: Remove
+        printf("%02X%02X|", buffer[0], buffer[1]);
         // build instruction from these bytes
         instruction_t instruction = instruction_from_raw(buffer);
         // use instruction opcode to execute the appropriate operation:
@@ -287,6 +291,11 @@ extern "C"{
                 // we should never get here, but if we do for some reason then error
                 return false;
         }
+        // TODO REMOVE
+        for(int i = 0; i < 16; i++) {
+            printf("%02X", state->registers[i]);
+        }
+        printf("\n");
         // if we're here then this means that the instruction was executed correctly
         // set the program counter to the address of the next instruction
         state->program_counter[0] = next_instruction_bytes[0];
