@@ -6,7 +6,7 @@ This is an implementation of my own design for a simple, fixed instruction set C
 
 There are only sixteen instructions, all of which are two bytes long regardless of operands.
 
-The CPU can handle 8-bit unsigned integers only. As a result, it can address up to 256 bytes of RAM. This could be extended to 16-bit integers and then being able to address up to 64K of RAM. This could be done by doubling the size of the part of the instruction used for RAM addressing (lengthening the instruction size to three bytes). To make sure this space is not completely wasted, instructions that operate on registers could be parallelised to operate on two sets at once, perhaps.
+The CPU can handle 8-bit unsigned integers only. It can address up to 64KiB (*kibibytes*) of RAM by using two bytes for addressing purposes (equivalent to an 8-bit CPU with a 16-bit data bus I guess). RAM is addressed by passing in the addresses of two registers, which between them make up the two bytes needed to address RAM. 
 
 **Note:** In all cases (register addresses, RAM addresses, opcodes and literal values) all integers are unsigned and are Big-Endian.
 
@@ -31,15 +31,11 @@ The next 4 bits are always used for a register's address (there are 16 registers
 
 The final 8 bits are used differently depending on what the instruction is:
 
-If the instruction is mathematical, logical or comparative, then the final 8 bits are split into two 4-bit register addresses. These are the operands of the operation (**`NOT`** only has one operand, which uses the first 4 bits only).
-
-If the instruction is **`SAV`** or **`LOD`** (save/load), then the last 8 bits are the memory address to read from/to.
+If the instruction is mathematical, logical, comparative one of **`SAV`**, **`LOD`**, **`JMP`** or **`JIF`**, then the final 8 bits are split into two 4-bit register addresses. These are the operands of the operation (**`NOT`** only has one operand, which uses the first 4 bits only). With RAM or JUMP operations, the operands are used to do the addressing.
 
 If the instruction is **`COP`**, then like **`NOT`** only the first 4 bits of the 8 remaining bits are used, and this is a register address.
 
 If the instruction is **`SET`**, then the final 8 bits are a literal unsigned integer value, which is used by this instruction.
-
-Finally, if the instruction is **`JMP`** or **`JIF`**, then the last 8 bits are the RAM address to jump to.
 
 ## Instruction Set
 

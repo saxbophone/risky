@@ -36,9 +36,6 @@ extern "C"{
     // // register address type (restricted to 4 bits in struct)
     typedef uint8_t register_address_t;
 
-    // memory address type
-    typedef uint8_t memory_address_t;
-
     // literal value type
     typedef uint8_t literal_value_t;
 
@@ -50,7 +47,6 @@ extern "C"{
 
     // operands union, used for the second byte of an instruction
     typedef union instruction_operands_t {
-        memory_address_t memory_address; // an 8-bit memory address
         literal_value_t literal_value; // an 8-bit literal value
         registers_t registers; // two 4-bit registers
     } instruction_operands_t;
@@ -64,7 +60,8 @@ extern "C"{
 
     // risky virtual machine state struct, stores the entire state of the machine
     typedef struct {
-        uint8_t program_counter; // stores index of currently executing instruction in RAM
+        uint8_t program_counter[2]; // stores index of currently executing instruction in RAM
+        uint8_t next_instruction[2]; // stores index of next instruction to execute
         uint8_t registers[16]; // 16 8-bit registers at our disposal
         uint8_t ram[256][256]; // 256*256 bytes (64KiB) of RAM at our disposal!
     } risky_state_t;
@@ -75,15 +72,17 @@ extern "C"{
     // Creates and returns a new instruction struct from raw bytes
     instruction_t instruction_from_raw(instruction_raw_t * raw_instruction);
 
+    // Converts an array of two uint8_t to one uin16_t, big-endian
+    uint16_t bytes_to_short(uint8_t * bytes);
+
+    // Converts one uint16_t to an array of two uint8_t, big-endian
+    void short_to_bytes(uint16_t single, uint8_t * bytes);
+
     // execute a functional instruction and store the value of the result in state
     // returns true / false on success / error
     bool function_operation(instruction_t instruction, risky_state_t * state);
 
-    // execute a pure register-to-register operation, manipulating state as necessary
-    // returns false if given opcode was invalid
-    bool register_operation(instruction_t instruction, risky_state_t * state);
-
-    // execute a memory operation, manipulating state as necessary
+    // execute a memory or register operation, manipulating state as necessary
     // returns false if given opcode was invalid
     bool memory_operation(instruction_t instruction, risky_state_t * state);
 
