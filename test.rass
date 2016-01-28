@@ -1,0 +1,7 @@
+set 0 0
+set 1 6
+set 2 41
+set 3 52
+add 4 2 3
+cop 2 4
+jmp 0 0
