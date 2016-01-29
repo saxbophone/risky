@@ -240,6 +240,7 @@ extern "C"{
             state->ram[second_address_bytes[0]][second_address_bytes[1]]
         };
         // TODO: Remove
+        printf("%02X%02X|", state->program_counter[0], state->program_counter[1]);
         printf("%02X%02X|", buffer[0], buffer[1]);
         // build instruction from these bytes
         instruction_t instruction = instruction_from_raw(buffer);

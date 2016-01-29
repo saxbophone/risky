@@ -1,7 +1,28 @@
-set 0 0
-set 1 6
-set 2 41
-set 3 52
-add 4 2 3
-cop 2 4
-jmp 0 0
+set 1 0
+set 2 1
+cop 15 1
+cop 15 2
+cop 4 2
+cop 3 1
+set 7 0
+set 8 20
+set 9 0
+set 10 36
+add 5 3 4
+cop 3 4
+cop 4 5
+cop 15 5
+equ 12 7 15
+jif 12 9 10
+jmp 7 8
+set 1 0
+set 2 0
+set 3 0
+set 4 0
+set 5 0
+set 7 0
+set 8 0
+set 9 0
+set 10 0
+set 12 0
+mod 0 0 0
