@@ -128,7 +128,8 @@ extern "C"{
     dump_registers(risky_state_t * state);
 
     // Given a risky state struct, print out a dump of the state's RAM
-    // to stdout
+    // to stdout - only prints out the 256-byte block currently occupied
+    // by the program counter
     void
     dump_ram(risky_state_t * state);
 

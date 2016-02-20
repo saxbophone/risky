@@ -360,7 +360,8 @@ extern "C"{
     }
 
     // Given a risky state struct, print out a dump of the state's RAM
-    // to stdout
+    // to stdout - only prints out the 256-byte block currently occupied
+    // by the program counter
     void
     dump_ram(risky_state_t * state) {
         for(int i = 0; i < 8; i++) {
@@ -385,7 +386,7 @@ extern "C"{
         horizontal_rule(99, "-");
         printf("\n");
         dump_program_counter(state);
-        horizontal_rule(40, " ");
+        printf(" <- PC    v-RAM-v          REGISTERS -> ");
         dump_registers(state);
         printf("\n");
         dump_ram(state);
