@@ -334,16 +334,12 @@ extern "C"{
     // to stdout
     void
     dump_registers(risky_state_t * state) {
-        printf("| REGISTERS |");
+        printf("|");
         for(int i = 0; i < 16; i++) {
             printf(" %02X", state->registers[i]);
         }
         // end line
-        printf(" |\n");
-        // print out horizontal rule underneath
-        printf(
-            "|-----------|-------------------------------------------------|\n"
-        );
+        printf(" |");
     }
 
     // // Given a risky state struct, print out a dump of the state's RAM

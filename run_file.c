@@ -24,6 +24,7 @@ int main(int argc, char const *argv[]) {
             // if boot was successful, run CPU loop until risky_run returns false
             while(risky_run(&state)) {
                 dump_registers(&state);
+                printf("\n");
             }
             return 0;
         } else {
