@@ -22,7 +22,9 @@ int main(int argc, char const *argv[]) {
         risky_state_t state = risky_init();
         if(risky_boot((char *)argv[1], &state)) {
             // if boot was successful, run CPU loop until risky_run returns false
-            while(risky_run(&state));
+            while(risky_run(&state)) {
+                dump_registers(&state);
+            }
             return 0;
         } else {
             fprintf(stderr, "Couldn't boot from file.\n");

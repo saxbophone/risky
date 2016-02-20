@@ -113,6 +113,16 @@ extern "C"{
     bool
     risky_run(risky_state_t * state);
 
+    // Given a risky state struct, print out a dump of the state's registers
+    // to stdout
+    void
+    dump_registers(risky_state_t * state);
+
+    // Given a risky state struct, print out a dump of the state's RAM
+    // to stdout
+    void
+    dump_ram(risky_state_t * state);
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

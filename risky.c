@@ -330,6 +330,29 @@ extern "C"{
         return true;
     }
 
+    // Given a risky state struct, print out a dump of the state's registers
+    // to stdout
+    void
+    dump_registers(risky_state_t * state) {
+        printf("| REGISTERS |");
+        for(int i = 0; i < 16; i++) {
+            printf(" %02X", state->registers[i]);
+        }
+        // end line
+        printf(" |\n");
+        // print out horizontal rule underneath
+        printf(
+            "|-----------|-------------------------------------------------|\n"
+        );
+    }
+
+    // // Given a risky state struct, print out a dump of the state's RAM
+    // // to stdout
+    // void
+    // dump_ram(risky_state_t * state) {
+    //     // not implemented
+    // }
+
 #ifdef __cplusplus
 } // extern "C"
 #endif
