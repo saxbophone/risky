@@ -330,13 +330,22 @@ extern "C"{
         return true;
     }
 
+    // Given a risky state struct, print out a dump of the state's program
+    // counter to stdout
+    void
+    dump_program_counter(risky_state_t * state) {
+        printf(
+            "| %02x%02x |", state->program_counter[0], state->program_counter[1]
+        );
+    }
+
     // Given a risky state struct, print out a dump of the state's registers
     // to stdout
     void
     dump_registers(risky_state_t * state) {
         printf("|");
         for(int i = 0; i < 16; i++) {
-            printf(" %02X", state->registers[i]);
+            printf(" %02x", state->registers[i]);
         }
         // end line
         printf(" |");

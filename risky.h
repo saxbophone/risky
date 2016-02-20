@@ -113,6 +113,11 @@ extern "C"{
     bool
     risky_run(risky_state_t * state);
 
+    // Given a risky state struct, print out a dump of the state's program
+    // counter to stdout
+    void
+    dump_program_counter(risky_state_t * state);
+
     // Given a risky state struct, print out a dump of the state's registers
     // to stdout
     void
