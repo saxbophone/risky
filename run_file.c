@@ -23,9 +23,7 @@ int main(int argc, char const *argv[]) {
         if(risky_boot((char *)argv[1], &state)) {
             // if boot was successful, run CPU loop until risky_run returns false
             while(risky_run(&state)) {
-                dump_program_counter(&state);
-                dump_registers(&state);
-                printf("\n");
+                dump_machine_state(&state);
             }
             return 0;
         } else {

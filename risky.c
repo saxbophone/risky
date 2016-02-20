@@ -330,6 +330,14 @@ extern "C"{
         return true;
     }
 
+    // Print a horizontal line composed of hyphens to stdout (no newline)
+    void
+    horizontal_rule(int length, const char * character) {
+        for(int i = 0; i < length; i++) {
+            printf("%s", character);
+        }
+    }
+
     // Given a risky state struct, print out a dump of the state's program
     // counter to stdout
     void
@@ -351,12 +359,39 @@ extern "C"{
         printf(" |");
     }
 
-    // // Given a risky state struct, print out a dump of the state's RAM
-    // // to stdout
-    // void
-    // dump_ram(risky_state_t * state) {
-    //     // not implemented
-    // }
+    // Given a risky state struct, print out a dump of the state's RAM
+    // to stdout
+    void
+    dump_ram(risky_state_t * state) {
+        for(int i = 0; i < 8; i++) {
+            printf("|");
+            for(int j = 0; j < 32; j++) {
+                if(((i*32)+j) == state->program_counter[1]) {
+                    printf(">");
+                }
+                else {
+                    printf(" ");
+                }
+                printf("%02x", state->ram[state->program_counter[0]][(i*32)+j]);
+            }
+            printf(" |\n");
+        }
+    }
+
+    // Given a risky state struct, print out a dump of the machine's state
+    // to stdout
+    void
+    dump_machine_state(risky_state_t * state) {
+        horizontal_rule(99, "-");
+        printf("\n");
+        dump_program_counter(state);
+        horizontal_rule(40, " ");
+        dump_registers(state);
+        printf("\n");
+        dump_ram(state);
+        horizontal_rule(99, "-");
+        printf("\n");
+    }
 
 #ifdef __cplusplus
 } // extern "C"

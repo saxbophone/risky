@@ -113,6 +113,10 @@ extern "C"{
     bool
     risky_run(risky_state_t * state);
 
+    // Print a horizontal line composed of hyphens to stdout (no newline)
+    void
+    horizontal_rule(int length, const char * character);
+
     // Given a risky state struct, print out a dump of the state's program
     // counter to stdout
     void
@@ -127,6 +131,11 @@ extern "C"{
     // to stdout
     void
     dump_ram(risky_state_t * state);
+
+    // Given a risky state struct, print out a dump of the machine's state
+    // to stdout
+    void
+    dump_machine_state(risky_state_t * state);
 
 #ifdef __cplusplus
 } // extern "C"
