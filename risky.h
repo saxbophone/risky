@@ -25,7 +25,7 @@ extern "C"{
     // instruction opcodes enum
     typedef enum {
         ADD = 0x0U, SUB = 0x1U, MUL = 0x2U, MOD = 0x3U,
-        AND = 0x4U, NOT = 0x5U, OR = 0x6U,  XOR = 0x7U,
+        AND = 0x4U, NOT = 0x5U, OR  = 0x6U, XOR = 0x7U,
         SAV = 0x8U, LOD = 0x9U, COP = 0xAU, SET = 0xBU,
         JMP = 0xCU, JIF = 0xDU, EQU = 0xEU, GRT = 0xFU
     } instruction_opcode_e;
@@ -54,49 +54,64 @@ extern "C"{
     // instruction type, used to represent a whole instruction
     typedef struct {
         instruction_opcode_t opcode : 4; // restricted to 4 bits
-        register_address_t primary : 4; // primary reg for result/destination/source
+        // primary reg for result/destination/source
+        register_address_t primary : 4;
         instruction_operands_t operands; // instruction_operands_t is 8 bits
     } instruction_t;
 
-    // risky virtual machine state struct, stores the entire state of the machine
+    // risky virtual machine state struct, stores the state of the machine
     typedef struct {
-        uint8_t program_counter[2]; // stores index of currently executing instruction in RAM
-        uint8_t next_instruction[2]; // stores index of next instruction to execute
+        // stores index of currently executing instruction in RAM
+        uint8_t program_counter[2];
+        // stores index of next instruction to execute
+        uint8_t next_instruction[2];
         uint8_t registers[16]; // 16 8-bit registers at our disposal
         uint8_t ram[256][256]; // 256*256 bytes (64KiB) of RAM at our disposal!
     } risky_state_t;
 
     // Creates and returns a new blank risky state struct
-    risky_state_t risky_init();
+    risky_state_t
+    risky_init();
 
     // Given a file path and a risky state struct, attempts to load the file
-    // contents into the memory of the risky state.
-    // Returns true on success, false on failure to read or load the file into memory.
-    bool risky_boot(char filepath[], risky_state_t * state);
+    // contents into the memory of the risky state. Returns true on success,
+    // false on failure to read or load the file into memory.
+    bool
+    risky_boot(char filepath[], risky_state_t * state);
 
-    // Populates a byte array with the raw bytes that represent an instruction struct
-    void instruction_to_raw(instruction_t instruction, instruction_raw_t * raw_instruction);
+    // Populates a byte array with the raw bytes that
+    // represent an instruction struct
+    void
+    instruction_to_raw(
+        instruction_t instruction, instruction_raw_t * raw_instruction
+    );
 
     // Creates and returns a new instruction struct from raw bytes
-    instruction_t instruction_from_raw(instruction_raw_t * raw_instruction);
+    instruction_t
+    instruction_from_raw(instruction_raw_t * raw_instruction);
 
     // Converts an array of two uint8_t to one uin16_t, big-endian
-    uint16_t bytes_to_short(uint8_t * bytes);
+    uint16_t
+    bytes_to_short(uint8_t * bytes);
 
     // Converts one uint16_t to an array of two uint8_t, big-endian
-    void short_to_bytes(uint16_t single, uint8_t * bytes);
+    void
+    short_to_bytes(uint16_t single, uint8_t * bytes);
 
-    // execute a functional instruction and store the value of the result in state
-    // returns true / false on success / error
-    bool function_operation(instruction_t instruction, risky_state_t * state);
+    // execute a functional instruction and store the value of the result in
+    // risky_state_t state - returns true / false on success / error
+    bool
+    function_operation(instruction_t instruction, risky_state_t * state);
 
     // execute a memory or register operation, manipulating state as necessary
     // returns false if given opcode was invalid
-    bool memory_operation(instruction_t instruction, risky_state_t * state);
+    bool
+    memory_operation(instruction_t instruction, risky_state_t * state);
 
-    // Given a risky state struct, executes one instruction for this machine state
-    // returns true on success, false on error
-    bool risky_run(risky_state_t * state);
+    // Given a risky state struct, executes one instruction for this machine
+    // state returns true on success, false on error
+    bool
+    risky_run(risky_state_t * state);
 
 #ifdef __cplusplus
 } // extern "C"
