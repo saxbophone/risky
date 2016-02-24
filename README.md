@@ -1,6 +1,14 @@
 # risky
 A tiny virtual processor with a RISC-inspired instruction set
 
+## Why?
+
+A couple of years ago I started building an 8-Bit CPU in the popular sandbox building game *Minecraft*. I got about as far as building the arithmetic logic unit (ALU) and then gave up. However, the idea stuck with me and I decided that if I were to give it another go, I should carefully plan out the design of the CPU first and write an emulator to prototype it, before taking pixellated pickaxe to pixellated block and building the damn thing in Minecraft.
+
+**RISKY** is that prototype. It is by no means perfect, and I sacrificed a lot in the way of convention and practicality to keep it as minimal and *pure* as possible for ease of building (although how much it ticks either of those boxes is left as an open question).
+
+> I haven't yet built **RISKY** in Minecraft, as I have not yet finalised the design but I will update this repo with a download link for the world save if I get round to building it. :wrench:
+
 ## Overview
 This is an implementation of my own design for a simple, fixed instruction set CPU.
 
