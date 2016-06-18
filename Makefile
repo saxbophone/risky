@@ -11,9 +11,9 @@ risky_boot.o: risky_boot.c
 	$(CC) $(CFLAGS) -c risky_boot.c
 
 risky_boot: risky.o risky_boot.o
-	$(CC) $(CFLAGS) -g -o risky_boot risky.o risky_boot.o
+	$(CC) $(CFLAGS) -g -o risky risky.o risky_boot.o
 
 build: risky_boot
 
 clean:
-	rm -f *.o
+	rm -f *.o risky
