@@ -9,6 +9,10 @@ A couple of years ago I started building an 8-Bit CPU in the popular sandbox bui
 
 > I haven't yet built **RISKY** in Minecraft, as I have not yet finalised the design but I will update this repo with a download link for the world save if I get round to building it. :wrench:
 
+## License
+
+This project is licensed under the **GNU General Public License v3.0**, a full copy of which is included in this reposity [here](LICENSE)
+
 ## Overview
 This is an implementation of my own design for a simple, fixed instruction set CPU.
 
