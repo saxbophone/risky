@@ -11,7 +11,7 @@ A couple of years ago I started building an 8-Bit CPU in the popular sandbox bui
 
 ## License
 
-This project is licensed under the **GNU General Public License v3.0**, a full copy of which is included in this repository [here](LICENSE)
+This project is licensed under the **GNU General Public License v3.0**, a full copy of which is included in this repository [here](https://raw.githubusercontent.com/saxbophone/risky/master/LICENSE)
 
 ## Overview
 This is an implementation of my own design for a simple, fixed instruction set CPU.
