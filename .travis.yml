@@ -11,6 +11,11 @@ addons:
     packages:
       - cmake
       - cmake-data
+# branches safelist
+branches:
+  only:
+    - master
+    - develop
 before_script:
   - cmake .
 script:
