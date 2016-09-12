@@ -1,4 +1,4 @@
-# risky [![Build Status](https://travis-ci.org/saxbophone/risky.svg?branch=master)](https://travis-ci.org/saxbophone/risky)
+# risky [![Build Status](https://travis-ci.org/saxbophone/risky.svg?branch=develop)](https://travis-ci.org/saxbophone/risky)
 A tiny virtual processor with a RISC-inspired instruction set
 
 > **Note**: This is my second attempt at writing a minimalist VM.
