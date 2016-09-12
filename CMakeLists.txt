@@ -72,4 +72,4 @@ install(FILES ${LIB_RISKY_HEADERS} DESTINATION include/risky)
 install(PROGRAMS rivm DESTINATION bin)
 
 enable_testing()
-add_test(unit_tests test)
+add_test(unit_tests tests)
