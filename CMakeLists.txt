@@ -33,7 +33,7 @@ endfunction()
 # enable all warnings about 'questionable constructs'
 enable_c_compiler_flag_if_supported("-Wall")
 # issue 'pedantic' warnings for strict ISO compliance
-enable_c_compiler_flag_if_supported("-Wpedantic")
+enable_c_compiler_flag_if_supported("-pedantic")
 # enable 'extra' strict warnings
 enable_c_compiler_flag_if_supported("-Wextra")
 # convert all warnings into errors
