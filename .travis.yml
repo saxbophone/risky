@@ -2,6 +2,8 @@ language: c
 compiler:
   - clang
   - gcc
+cache:
+  - ccache
 addons:
   apt:
     sources:
