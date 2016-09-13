@@ -13,7 +13,7 @@ I did this and the results can be found at the link to the prototype at the top 
 So, this is the new version of **RISKY**, currently under development and aiming towards a version 1 release goal. I haven't finalised all the details yet, but it will most likely be a 16-bit machine with more instructions than the prototype. Regardless of this the aim will still be to keep it as minimal and well-rounded as possible, the idea being that it should be designed to be as easy to create a simulated hardware version of the machine (in Minecraft or in a piece of electronics simulation software) as possible.
 
 ## License
-This version and all future versions of the software will be licensed under the **Moziall Public License v2.0**, a copy of which can be found in the file named [LICENSE](https://raw.githubusercontent.com/saxbophone/risky/master/LICENSE) in the root directory of this repository.
+This version and all future versions of the software will be licensed under the **Mozilla Public License v2.0**, a copy of which can be found in the file named [LICENSE](https://raw.githubusercontent.com/saxbophone/risky/master/LICENSE) in the root directory of this repository.
 
 > **Note**: I'd previously licensed the prototype under the MIT license and then under v3.0 of the GNU GPL.
 
