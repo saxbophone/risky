@@ -12,6 +12,58 @@ I did this and the results can be found at the link to the prototype at the top 
 
 So, this is the new version of **RISKY**, currently under development and aiming towards a version 1 release goal. I haven't finalised all the details yet, but it will most likely be a 16-bit machine with more instructions than the prototype. Regardless of this the aim will still be to keep it as minimal and well-rounded as possible, the idea being that it should be designed to be as easy to create a simulated hardware version of the machine (in Minecraft or in a piece of electronics simulation software) as possible.
 
+## Plan
+Here I will outline the planned design or **RISKY**
+
+### Instruction Glossary
+It is planned that there will be 32 instructions. Here is a table of instruction mnemonics and a brief description of each.
+
+| Instruction Mnemonic | Description                                              |
+| -------------------- | -------------------------------------------------------- |
+| ADD                  | Add two values together                                  |
+| SUB                  | Subtract one value from another                          |
+| MLT                  | Multiply two values together                             |
+| DIV                  | Divide one value by another                              |
+| INC                  | Increment a value                                        |
+| DEC                  | Decrement a value                                        |
+| MOD                  | Perform modulo division of one value by another          |
+| OR                   | Bitwise OR two values together                           |
+| NOT                  | Bitwise NOT one value                                    |
+| AND                  | Bitwise AND two values together                          |
+| XOR                  | Bitwise XOR two values together                          |
+| LSH                  | Shift the bits of a value to the left                    |
+| RSH                  | Shift the bits of a value to the right                   |
+| ROT                  | Rotate the bits of a value                               |
+| EQU                  | Compare two values for equality                          |
+| NEQ                  | Compare two values for inequality                        |
+| GTN                  | Compare if one value is greater than another             |
+| LTN                  | Compare if one value is less than another                |
+| GEQ                  | Compare if one value is greater than or equal to another |
+| LEQ                  | Compare if one value is less than or equal to another    |
+| NOP                  | No-Op, Do nothing                                        |
+| JMP                  | Unconditional jump to a new memory address               |
+| BRA                  | Conditional jump to a new memory address                 |
+| HLT                  | Halt, completely stop the CPU                            |
+| RIT                  | Register an interrupt handler                            |
+| SLP                  | Put CPU into sleep mode (recoverable by interrupt)       |
+| INT                  | Manually trigger an interrupt                            |
+| CLR                  | Clear a registered interrupt handler                     |
+| SET                  | Set the value of a register to a literal value           |
+| COP                  | Copy the value of one register to another                |
+| LOD                  | Load a value from memory to a register                   |
+| SAV                  | Save the value of a register to memory                   |
+
+### Instruction Categories
+Instructions fall into one of 5 different groups, and all groups except **Memory Operations** also have a *basic* and an *advanced* sub-group.
+
+| Instruction Group Name | Basic Set       | Advanced Set    |
+| ---------------------- | --------------- | --------------- |
+| Arithmetic Operations  | ADD SUB MLT DIV | INC DEC MOD     |
+| Logical Operations     | OR NOT AND XOR  | LSH RSH ROT     |
+| Comparisons            | EQU NEQ GTN LTN | GEQ LEQ         |
+| Flow Control           | NOP JMP BRA HLT | RIT SLP INT CLR |
+| Memory Operations      | SET COP LOD SAV |                 |
+
 ## License
 This version and all future versions of the software will be licensed under the **Mozilla Public License v2.0**, a copy of which can be found in the file named [LICENSE](https://raw.githubusercontent.com/saxbophone/risky/master/LICENSE) in the root directory of this repository.
 
