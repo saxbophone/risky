@@ -39,12 +39,10 @@ enable_c_compiler_flag_if_supported("-Wextra")
 # convert all warnings into errors
 enable_c_compiler_flag_if_supported("-Werror")
 
-# C source files
+# C Source files
 file(GLOB LIB_RISKY_SOURCES "risky/*.c")
-# Header files
+# C Header files
 file(GLOB LIB_RISKY_HEADERS "risky/*.h")
-# Main library header file
-set(LIB_RISKY_MAIN_HEADER "risky.h")
 
 # main library
 add_library(risky ${LIB_RISKY_SOURCES})
@@ -63,8 +61,6 @@ install(
     RUNTIME DESTINATION bin
 )
 
-# install main library header file
-install(FILES ${LIB_RISKY_MAIN_HEADER} DESTINATION include)
 # install library header files
 install(FILES ${LIB_RISKY_HEADERS} DESTINATION include/risky)
 
