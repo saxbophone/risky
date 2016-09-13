@@ -1,5 +1,5 @@
-#ifndef SAXBOPHONE_RISKY_CORE_H
-#define SAXBOPHONE_RISKY_CORE_H
+#ifndef SAXBOPHONE_RISKY_RISKY_H
+#define SAXBOPHONE_RISKY_RISKY_H
 
 #include <stdint.h>
 
