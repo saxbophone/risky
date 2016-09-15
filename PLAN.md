@@ -45,7 +45,7 @@ Instructions fall into one of 8 different groups. Each group contains 4 instruct
 | Instruction Group Name         | Instructions    |
 | ------------------------------ | --------------- |
 | Arithmetic Operations          | ADD SUB MLT DIV |
-| Extended Arithmetic Operations | INC DEC MOD ??? |
+| Extended Arithmetic Operations | INC DEC MOD XX0 |
 | Logical Operations             | EOR NOT AND XOR |
 | Bit Manipulation Operations    | LSH RSH ROT CAS |
 | Comparisons                    | EQU NEQ GTN LTN |
