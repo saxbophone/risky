@@ -47,11 +47,20 @@ endif()
 file(GLOB LIB_RISKY_SOURCES "risky/*.c")
 # C Header files
 file(GLOB LIB_RISKY_HEADERS "risky/*.h")
+
+# Test Suite Harness Source Files
+file(GLOB TEST_HARNESS_SOURCES "unit_test_harness/*.c")
+# Test Suite Harness Header Files
+file(GLOB TEST_HARNESS_HEADERS "unit_test_harness/*.h")
+
 # Unit test C Source files
 file(GLOB TEST_RISKY_SOURCES "tests/*.c")
 
 # main library
 add_library(risky ${LIB_RISKY_SOURCES})
+
+# test harness library
+add_library(test_harness ${TEST_HARNESS_SOURCES})
 
 # main vm cli executable
 add_executable(rivm rivm.c)
@@ -67,8 +76,8 @@ foreach(test_source_file ${TEST_RISKY_SOURCES})
     set(test_name "test_${test_name}")
     # create executable for test
     add_executable(${test_name} ${test_source_file})
-    # link test with library
-    target_link_libraries(${test_name} risky)
+    # link test with library and test harness library
+    target_link_libraries(${test_name} risky test_harness)
     # add test
     add_test(${test_name} ${test_name})
 endforeach()
