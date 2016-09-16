@@ -18,14 +18,25 @@ test_result_t test_init_risky_vm_state() {
     test.result = TEST_SUCCESS;
 
     // create risky_vm_state_t struct with all fields set to 0
-    risky_vm_state_t state = {0,};
+    risky_vm_state_t state = {{0}, NULL};
 
     // call function with address of state
     init_risky_vm_state(&state);
 
-    // check size of registers array divided by size of their type is 256
-    if((sizeof(state.registers) / sizeof(risky_register_t)) != 256) {
+    // check size of registers array is correct
+    if(
+        (
+            sizeof(state.registers) / sizeof(risky_register_t)
+        ) != RISKY_REGISTER_COUNT
+    ) {
         test.result = TEST_FAIL;
+    }
+    // check all registers are set to 0
+    for(size_t i = 0; i < RISKY_REGISTER_COUNT; i++) {
+        if(state.registers[i] != 0) {
+            test.result = TEST_FAIL;
+            break;
+        }
     }
     // check ram pointer is not NULL (memory has been allocated)
     if(state.ram == NULL) {

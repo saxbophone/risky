@@ -27,6 +27,8 @@ typedef enum status_t {
     STATUS_SUCCESS,
 } status_t;
 
+// number of registers
+#define RISKY_REGISTER_COUNT 256
 // amount of RAM the RISKY VM has, in bytes
 #define RISKY_RAM_AMOUNT 65536
 
