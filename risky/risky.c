@@ -1,3 +1,7 @@
+/*
+ * risky - this compilation unit defines very generic / miscellaneous types
+ * and values for the whole of RISKY.
+ */
 #include "risky.h"
 
 

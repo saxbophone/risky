@@ -1,3 +1,7 @@
+/*
+ * risky - this compilation unit defines very generic / miscellaneous types
+ * and values for the whole of RISKY.
+ */
 #ifndef SAXBOPHONE_RISKY_RISKY_H
 #define SAXBOPHONE_RISKY_RISKY_H
 
