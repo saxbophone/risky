@@ -69,11 +69,11 @@ Here is a series of tables for these groups, each containing mnemonics and brief
 | LOD                  | Load a value from memory to a register                   |
 | SAV                  | Save the value of a register to memory                   |
 
-### Undefined Group
+### Input / Output
 
 | Instruction Mnemonic | Description                                              |
 | -------------------- | -------------------------------------------------------- |
-| XX1                  | Undefined Instruction 1                                  |
-| XX2                  | Undefined Instruction 2                                  |
-| XX3                  | Undefined Instruction 3                                  |
-| XX4                  | Undefined Instruction 4                                  |
+| QDC                  | Query state of Data Channel                              |
+| TDC                  | Toggle state of Data Channel                             |
+| REA                  | Read data channel to register                            |
+| WRI                  | Write register to data channel                           |
