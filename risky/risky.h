@@ -21,10 +21,10 @@ typedef struct version_t {
 
 // enum for storing information about the error status of a function
 typedef enum status_t {
-    UNKNOWN = 0,
+    STATUS_UNKNOWN = 0,
     MALLOC_REFUSED,
     IMPOSSIBLE_CONDITION,
-    SUCCESS,
+    STATUS_SUCCESS,
 } status_t;
 
 extern const version_t VERSION;
