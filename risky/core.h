@@ -24,7 +24,7 @@ typedef uint8_t risky_ram_t;
 // risky vm state struct
 typedef struct risky_vm_state_t {
     // 256 registers
-    risky_register_t registers[256];
+    risky_register_t registers[RISKY_REGISTER_COUNT];
     // a pointer to a dynamically allocated array of RAM (65,536 bytes / 64KiB)
     risky_ram_t * ram;
 } risky_vm_state_t;
