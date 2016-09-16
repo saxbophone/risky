@@ -14,15 +14,30 @@ extern "C"{
 test_result_t test_init_risky_vm_state() {
     // initialise test result
     test_result_t test = TEST;
+    // set result to success for now, until proven otherwise by checks
+    test.result = TEST_SUCCESS;
 
-    // create uninitialised risky_vm_state_t struct
-    risky_vm_state_t state;
+    // create risky_vm_state_t struct with all fields set to 0
+    risky_vm_state_t state = {0,};
 
     // call function with address of state
     init_risky_vm_state(&state);
 
-    // check state struct
-    // TODO ^^^
+    // check size of registers array divided by size of their type is 256
+    if((sizeof(state.registers) / sizeof(risky_register_t)) != 256) {
+        test.result = TEST_FAIL;
+    }
+    // check ram pointer is not NULL (memory has been allocated)
+    if(state.ram == NULL) {
+        test.result = TEST_FAIL;
+    }
+    // check all RAM is set to 0 (good indicator if enough has been allocated)
+    for(size_t i = 0; i < RISKY_RAM_AMOUNT; i++) {
+        if(state.ram[i] != 0) {
+            test.result = TEST_FAIL;
+            break;
+        }
+    }
     return test;
 }
 

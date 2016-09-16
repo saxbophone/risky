@@ -15,9 +15,17 @@
 extern "C"{
 #endif
 
+// register type
+typedef uint16_t risky_register_t;
+// RAM type
+typedef uint8_t risky_ram_t;
+
 // risky vm state struct
 typedef struct risky_vm_state_t {
-    uint8_t nothing; // TODO: Replace with something more meaningful
+    // 256 registers
+    risky_register_t registers[256];
+    // a pointer to a dynamically allocated array of RAM (65,536 bytes / 64KiB)
+    risky_ram_t * ram;
 } risky_vm_state_t;
 
 /*
