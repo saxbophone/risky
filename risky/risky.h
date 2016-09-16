@@ -27,6 +27,9 @@ typedef enum status_t {
     STATUS_SUCCESS,
 } status_t;
 
+// amount of RAM the RISKY VM has, in bytes
+#define RISKY_RAM_AMOUNT 65536
+
 extern const version_t VERSION;
 
 #ifdef __cplusplus
