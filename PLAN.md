@@ -71,9 +71,9 @@ Here is a series of tables for these groups, each containing mnemonics and brief
 
 ### Input / Output
 
-| Instruction Mnemonic | Description                    |
-| -------------------- | ------------------------------ |
-| QDC                  | Query state of Data Channel    |
-| TDC                  | Toggle state of Data Channel   |
-| REA                  | Read data channel to register  |
-| WRI                  | Write register to data channel |
+| Instruction Mnemonic | Description                     |
+| -------------------- | ------------------------------- |
+| QDC                  | Query state of Data Channel     |
+| CDC                  | Configure state of Data Channel |
+| REA                  | Read data channel to register   |
+| WRI                  | Write register to data channel  |
