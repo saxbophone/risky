@@ -20,9 +20,17 @@ extern "C"{
 status_t decode_instruction_from_raw(
     risky_raw_instruction_t * raw, risky_instruction_t * instruction
 ) {
-    status_t result = STATUS_UNKNOWN;
-    // dummy implementation to avoid 'arguments unused' errors
-    instruction->opcode = raw->bytes[0] % 32;
+    // copy across opcode
+    instruction->opcode = (risky_opcode_t)(raw->bytes[0] >> 3) % 32;
+    // set all other fields to 0
+    instruction->a_flag = false;
+    instruction->b_flag = false;
+    instruction->c_flag = false;
+    instruction->r = 0;
+    instruction->a = 0;
+    instruction->b = 0;
+    instruction->l = 0;
+    status_t result = STATUS_SUCCESS;
     return result;
 }
 
