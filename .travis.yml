@@ -20,6 +20,7 @@ branches:
     - master
     - develop
     - /^sprint\/.*$/
+    - /^test\/.*$/
 before_script:
   - cmake .
 script:
