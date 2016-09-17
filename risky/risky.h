@@ -5,6 +5,7 @@
 #ifndef SAXBOPHONE_RISKY_RISKY_H
 #define SAXBOPHONE_RISKY_RISKY_H
 
+#include <stddef.h>
 #include <stdint.h>
 
 
@@ -22,10 +23,21 @@ typedef struct version_t {
 // enum for storing information about the error status of a function
 typedef enum status_t {
     STATUS_UNKNOWN = 0,
+    STATUS_FAIL,
     MALLOC_REFUSED,
     IMPOSSIBLE_CONDITION,
     STATUS_SUCCESS,
 } status_t;
+
+// byte and word types for RISKY
+typedef uint8_t risky_byte_t;
+typedef uint16_t risky_word_t;
+
+// struct for storing arrays of bytes, a data buffer
+typedef struct buffer_t {
+    risky_byte_t * bytes;
+    size_t size;
+} buffer_t;
 
 // number of registers
 #define RISKY_REGISTER_COUNT 256

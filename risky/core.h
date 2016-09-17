@@ -17,9 +17,9 @@ extern "C"{
 #endif
 
 // register type
-typedef uint16_t risky_register_t;
+typedef risky_word_t risky_register_t;
 // RAM type
-typedef uint8_t risky_ram_t;
+typedef risky_byte_t risky_ram_t;
 
 // risky vm state struct
 typedef struct risky_vm_state_t {
@@ -42,9 +42,9 @@ typedef enum risky_opcode_t {
 } risky_opcode_t;
 
 // register address type
-typedef uint8_t risky_register_address_t;
+typedef risky_byte_t risky_register_address_t;
 // RAM address type
-typedef risky_register_t risky_ram_address_t;
+typedef risky_word_t risky_ram_address_t;
 
 // risky instruction struct
 typedef struct risky_instruction_t {
@@ -56,6 +56,11 @@ typedef struct risky_instruction_t {
     // the other possible 16-bit memory address / literal value operand
     risky_register_t l;
 } risky_instruction_t;
+
+// struct storing raw bytes for an instruction
+typedef struct risky_raw_instruction_t {
+    risky_byte_t bytes[4];
+} risky_raw_instruction_t;
 
 /*
  * given a pointer to a risky_vm_state_t, initialises the state struct,
