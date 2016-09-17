@@ -41,6 +41,7 @@ test_result_t test_init_risky_vm_state() {
     // check ram pointer is not NULL (memory has been allocated)
     if(state.ram == NULL) {
         test.result = TEST_FAIL;
+        return test;
     }
     // check all RAM is set to 0 (good indicator if enough has been allocated)
     for(size_t i = 0; i < RISKY_RAM_AMOUNT; i++) {
