@@ -101,9 +101,9 @@ test_result_t test_decode_hlt() {
 
 /*
  * the JMP (jump) instruction should decode to the correct opcode
- * JMP is unique in being the only instruction that takes one memory address
- * as its sole argument. Therefore, all other flags and the first operand should
- * be ignored by the decoder, even if not zero.
+ * JMP is unique in being the only instruction that takes one register
+ * as its sole argument. Therefore, all other flags and operands should be
+ * ignored by the decoder, even if not zero.
  */
 test_result_t test_decode_jmp() {
     // initialise test result
@@ -113,10 +113,10 @@ test_result_t test_decode_jmp() {
     risky_raw_instruction_t raw = {
         /*
          * first byte should be 0b00001111 (0x0f)
-         * second byte should be anything but complete 0 to prove operands are
-         * being ignored
-         * third and fourth bytes should store the memory address, in
-         * big-endian format
+         * second byte should be anything but complete 0 to prove that the
+         * register operand is being used
+         * third and fourth bytes should be non-zero, to prove that they are
+         * beng ignored
          */
         .bytes = { 0x0fU, 0xffU, 0x15U, 0x93U, },
     };
@@ -126,8 +126,8 @@ test_result_t test_decode_jmp() {
     risky_instruction_t expected = {
         .opcode = JMP,
         .a_flag = false, .b_flag = false, .c_flag = false,
-        .r = 0, .a = 0, .b = 0,
-        .l = 0x1593U,
+        .r = 0xffU, .a = 0, .b = 0,
+        .l = 0,
     };
 
     // run decoder function
