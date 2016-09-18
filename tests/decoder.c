@@ -461,6 +461,122 @@ test_result_t test_decode_cas() {
     return test;
 }
 
+/*
+ * test helper function for testing opcodes / instructions that use two register
+ * operands (result register address and one operand address), along with two
+ * flags for these. All unused parameters are tested for 0 (should be ignored)
+ * TODO: finish this
+ */
+static test_status_t test_decode_two_register_operands(
+    risky_byte_t raw_opcode, risky_opcode_t opcode
+) {
+    // initialise test status to success for now, until proven otherwise
+    test_status_t test = TEST_SUCCESS;
+
+    // setup input raw instruction
+    risky_raw_instruction_t raw = {
+        /*
+         * set first byte to the value of raw_opcode, OR'ed with 2 1 bits at end
+         * set remaining three bytes to anything but complete 0 to prove that
+         * the first two operands are being read
+         */
+        .bytes = { raw_opcode | 0x06, 0xcaU, 0xfeU, 0x2dU, },
+    };
+    // setup blank output instruction
+    risky_instruction_t output;
+    // setup expected output instruction
+    risky_instruction_t expected = {
+        .opcode = opcode,
+        .a_flag = true, .b_flag = true, .c_flag = false,
+        .r = 0xcaU, .a = 0xfeU, .b = 0,
+        .l = 0,
+    };
+
+    // run decoder function
+    status_t result = decode_instruction_from_raw(&raw, &output);
+
+    // if function failed, return error
+    if(result != STATUS_SUCCESS) {
+        test = TEST_ERROR;
+        return test;
+    }
+    // check if output is equal to expected
+    if(!instructions_equal(output, expected)) {
+        test = TEST_FAIL;
+    }
+    return test;
+}
+
+/*
+ * the INC (increment) instruction should decode to the correct opcode
+ * two flags should be read from the raw instruction and two register addresses
+ */
+test_result_t test_decode_inc() {
+    // initialise test result
+    test_result_t test = TEST;
+
+    // set result to return result of helper functuion
+    test.result = test_decode_two_register_operands(0x0dU << 3, INC);
+
+    return test;
+}
+
+/*
+ * the DEC (decrement) instruction should decode to the correct opcode
+ * two flags should be read from the raw instruction and two register addresses
+ */
+test_result_t test_decode_dec() {
+    // initialise test result
+    test_result_t test = TEST;
+
+    // set result to return result of helper functuion
+    test.result = test_decode_two_register_operands(0x0eU << 3, DEC);
+
+    return test;
+}
+
+/*
+ * the NOT (bitwise not) instruction should decode to the correct opcode
+ * two flags should be read from the raw instruction and two register addresses
+ */
+test_result_t test_decode_not() {
+    // initialise test result
+    test_result_t test = TEST;
+
+    // set result to return result of helper functuion
+    test.result = test_decode_two_register_operands(0x13U << 3, NOT);
+
+    return test;
+}
+
+/*
+ * the ROT (rotate bits) instruction should decode to the correct opcode
+ * two flags should be read from the raw instruction and two register addresses
+ */
+test_result_t test_decode_rot() {
+    // initialise test result
+    test_result_t test = TEST;
+
+    // set result to return result of helper functuion
+    test.result = test_decode_two_register_operands(0x16U << 3, ROT);
+
+    return test;
+}
+
+/*
+ * the COP (copy register) instruction should decode to the correct opcode
+ * two flags should be read from the raw instruction and two register addresses
+ */
+test_result_t test_decode_cop() {
+    // initialise test result
+    test_result_t test = TEST;
+
+    // set result to return result of helper functuion
+    test.result = test_decode_two_register_operands(0x19U << 3, COP);
+
+    return test;
+}
+
 int main() {
     // initialise test suite
     test_suite_t suite = init_test_suite();
@@ -484,6 +600,11 @@ int main() {
     add_test_case(test_decode_lsh, &suite);
     add_test_case(test_decode_rsh, &suite);
     add_test_case(test_decode_cas, &suite);
+    add_test_case(test_decode_inc, &suite);
+    add_test_case(test_decode_dec, &suite);
+    add_test_case(test_decode_not, &suite);
+    add_test_case(test_decode_rot, &suite);
+    add_test_case(test_decode_cop, &suite);
     // run test suite
     run_test_suite(&suite);
     // return test suite status
