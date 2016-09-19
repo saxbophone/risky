@@ -88,10 +88,78 @@ status_t decode_instruction_from_raw(
         case HLT:
             // quit switch early
             break;
+        // JMP takes one register as its only argument
         case JMP:
-            // JMP takes one register as its only argument
             extract_instruction_fields(
                 raw, instruction, false, false, false, true, false, false, false
+            );
+            break;
+        // BRA takes one flag and two registers (r and a)
+        case BRA:
+            extract_instruction_fields(
+                raw, instruction, true, false, false, true, true, false, false
+            );
+            break;
+        /*
+         * the following fall-through case statements catch instructions which
+         * use all instruction fields (except the literal 16-bit value field)
+         */
+        case EQU:
+        case NEQ:
+        case GTN:
+        case LTN:
+        case ADD:
+        case SUB:
+        case MLT:
+        case DIV:
+        case MOD:
+        case EOR:
+        case AND:
+        case XOR:
+        case LSH:
+        case RSH:
+        case CAS:
+        case QDC:
+        case CDC:
+            extract_instruction_fields(
+                raw, instruction, true, true, true, true, true, true, false
+            );
+            break;
+        /*
+         * the following fall-through case statements catch instructions which
+         * use two flags and two register operands
+         */
+        case INC:
+        case DEC:
+        case NOT:
+        case ROT:
+        case COP:
+        case LOD:
+        case SAV:
+            extract_instruction_fields(
+                raw, instruction, true, true, false, true, true, false, false
+            );
+            break;
+        // the REA and WRI instructions use two register operands and no flags
+        case REA:
+        case WRI:
+            extract_instruction_fields(
+                raw, instruction, false, false, false, true, true, false, false
+            );
+            break;
+        // QOP is a unique instruction that uses one register and all three flags
+        case QOP:
+            extract_instruction_fields(
+                raw, instruction, true, true, true, true, false, false, false
+            );
+            break;
+        /*
+         * SET is a unique instruction that uses one register operand, one
+         * 16-bit literal value (big-endian) and one flag
+         */
+        case SET:
+            extract_instruction_fields(
+                raw, instruction, true, false, false, true, false, false, true
             );
             break;
         // impossible to match none of the opcodes, but just in case

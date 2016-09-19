@@ -118,7 +118,7 @@ test_result_t test_decode_jmp() {
          * second byte should be anything but complete 0 to prove that the
          * register operand is being used
          * third and fourth bytes should be non-zero, to prove that they are
-         * beng ignored
+         * being ignored
          */
         .bytes = { 0x0fU, 0xffU, 0x15U, 0x93U, },
     };
@@ -157,14 +157,16 @@ test_result_t test_decode_jmp() {
 test_result_t test_decode_bra() {
     // initialise test result
     test_result_t test = TEST;
+    // initialise test result to success for now, until proven otherwise
+    test.result = TEST_SUCCESS;
 
     // setup input raw instruction
     risky_raw_instruction_t raw = {
         /*
          * first byte should be 0b00010111 (0x17)
-         * second byte is the register address
-         * third and fourth bytes should store the memory address, in
-         * big-endian format
+         * second byte is the jump-to register address
+         * third byte is the register to check
+         * all other fields are ignored
          */
         .bytes = { 0x17U, 0xdbU, 0x9fU, 0x13U, },
     };
@@ -174,8 +176,8 @@ test_result_t test_decode_bra() {
     risky_instruction_t expected = {
         .opcode = BRA,
         .a_flag = true, .b_flag = false, .c_flag = false,
-        .r = 0xdbU, .a = 0, .b = 0,
-        .l = 0x9f13U,
+        .r = 0xdbU, .a = 0x9fU, .b = 0,
+        .l = 0,
     };
 
     // run decoder function
@@ -647,6 +649,8 @@ test_result_t test_decode_sav() {
 test_result_t test_decode_qop() {
     // initialise test result
     test_result_t test = TEST;
+    // initialise test result to success for now, until proven otherwise
+    test.result = TEST_SUCCESS;
 
     // setup input raw instruction
     risky_raw_instruction_t raw = {
@@ -694,6 +698,8 @@ test_result_t test_decode_qop() {
 test_result_t test_decode_set() {
     // initialise test result
     test_result_t test = TEST;
+    // initialise test result to success for now, until proven otherwise
+    test.result = TEST_SUCCESS;
 
     // setup input raw instruction
     risky_raw_instruction_t raw = {
