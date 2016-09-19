@@ -22,7 +22,7 @@ branches:
     - /^sprint\/.*$/
     - /^test\/.*$/
 before_script:
-  - cmake .
+  - scan-build cmake .
 script:
-  - make -j -k
+  - scan-build --status-bugs make -j -k
   - make test
