@@ -48,15 +48,39 @@ file(GLOB LIB_RISKY_SOURCES "risky/*.c")
 # C Header files
 file(GLOB LIB_RISKY_HEADERS "risky/*.h")
 
+# Test Suite Harness Source Files
+file(GLOB TEST_HARNESS_SOURCES "unit_test_harness/*.c")
+# Test Suite Harness Header Files
+file(GLOB TEST_HARNESS_HEADERS "unit_test_harness/*.h")
+
+# Unit test C Source files
+file(GLOB TEST_RISKY_SOURCES "tests/*.c")
+
 # main library
 add_library(risky ${LIB_RISKY_SOURCES})
 
-# executables
-add_executable(rivm rivm.c)
-add_executable(tests tests.c)
+# test harness library
+add_library(test_harness ${TEST_HARNESS_SOURCES})
 
+# main vm cli executable
+add_executable(rivm rivm.c)
+# link cli executable with library
 target_link_libraries(rivm risky)
-target_link_libraries(tests risky)
+
+enable_testing()
+# unit test executables
+foreach(test_source_file ${TEST_RISKY_SOURCES})
+    # remove '.c' extension and parent directories
+    get_filename_component(test_name ${test_source_file} NAME_WE)
+    # append "test_" to test_name
+    set(test_name "test_${test_name}")
+    # create executable for test
+    add_executable(${test_name} ${test_source_file})
+    # link test with library and test harness library
+    target_link_libraries(${test_name} risky test_harness)
+    # add test
+    add_test(${test_name} ${test_name})
+endforeach()
 
 install(
     TARGETS risky
@@ -70,6 +94,3 @@ install(FILES ${LIB_RISKY_HEADERS} DESTINATION include/risky)
 
 # install executables
 install(PROGRAMS rivm DESTINATION bin)
-
-enable_testing()
-add_test(unit_tests tests)

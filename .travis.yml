@@ -25,4 +25,4 @@ before_script:
   - cmake .
 script:
   - make -j -k
-  - make test
+  - ctest -V
