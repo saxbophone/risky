@@ -151,7 +151,8 @@ test_result_t test_decode_jmp() {
  * the BRA (branch) instruction should decode to the correct opcode
  * BRA takes three arguments: a flag telling it whether to evaluate the register
  * as an 8-bit value or a 16-bit value, the register to check the value of and
- * a memory address to jump to (if the evaluation of the register is true)
+ * a register containing a memory address to jump to (if the evaluation of the
+ * other register is true)
  * the other two flags are ignored, even if non-zero.
  */
 test_result_t test_decode_bra() {
