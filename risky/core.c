@@ -35,6 +35,25 @@ status_t init_risky_vm_state(risky_vm_state_t * state) {
     return result;
 }
 
+/*
+ * given a pointer to a risky_vm_state_t, de-initialises the state struct,
+ * frees memory, etc...
+ * Returns a status_t with error / success information
+ */
+status_t free_risky_vm_state(risky_vm_state_t * state) {
+    status_t result = STATUS_SUCCESS;
+    // set all registers to 0
+    for(size_t i = 0; i < RISKY_REGISTER_COUNT; i++) {
+        state->registers[i] = 0x00U;
+    }
+    // de-allocate memory if pointer is not NULL
+    if(state->ram != NULL) {
+        free(state->ram);
+        state->ram = NULL;
+    }
+    return result;
+}
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

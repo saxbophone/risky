@@ -59,7 +59,7 @@ typedef struct risky_instruction_t {
     bool a_flag, b_flag, c_flag;
     // 'return register' and other main operands
     risky_register_address_t r, a, b;
-    // the other possible 16-bit memory address / literal value operand
+    // the other possible 16-bit literal value operand
     risky_register_t l;
 } risky_instruction_t;
 
@@ -74,6 +74,13 @@ typedef struct risky_raw_instruction_t {
  * Returns a status_t with error / success information
  */
 status_t init_risky_vm_state(risky_vm_state_t * state);
+
+/*
+ * given a pointer to a risky_vm_state_t, de-initialises the state struct,
+ * frees memory, etc...
+ * Returns a status_t with error / success information
+ */
+status_t free_risky_vm_state(risky_vm_state_t * state);
 
 #ifdef __cplusplus
 } // extern "C"
