@@ -1,3 +1,4 @@
+[![Stand With Ukraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner2-direct.svg)](https://stand-with-ukraine.pp.ua)
 # risky [![Build Status](https://travis-ci.org/saxbophone/risky.svg?branch=develop)](https://travis-ci.org/saxbophone/risky)
 A tiny virtual processor with a RISC-inspired instruction set
 
